@@ -61,6 +61,29 @@ class SideMenu extends StatelessWidget {
           ),
 
           // Agrega más elementos de menú según tus necesidades
+
+          Divider(), // Línea divisoria
+
+          Container(
+            color: currentPage == 'cerrarSesion'
+                ? Colors.blue
+                : Colors.transparent,
+            child: ListTile(
+              leading: const Icon(Icons.exit_to_app, color: Colors.white),
+              title: const Text(
+                'Cerrar Sesión',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () {
+                // Agrega la lógica para cerrar la sesión
+                // Esto puede incluir limpiar datos de sesión y redirigir al inicio de sesión
+                Navigator.pushNamed(
+                    context, '/'); // Redirige a la página de inicio de sesión
+              },
+            ),
+          ),
         ],
       ),
     );

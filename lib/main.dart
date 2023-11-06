@@ -3,6 +3,7 @@ import 'package:gestiontareas/pages/agregarPaciente.dart';
 import 'package:gestiontareas/pages/login.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
 import 'package:gestiontareas/pages/profesional.dart';
+import 'package:gestiontareas/pages/registro.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'colores.dart';
 
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/', // Página de inicio
       routes: {
         // Página de inicio
-        '/': (context) => LoginPage(), // Página de inicio de sesión
+        '/': (context) => LoginView(), // Página de inicio de sesión
+        '/registro': (context) => RegistroView(),
         '/profesional': (context) => const ProfesionalView(),
         '/pacientes': (context) => PacientesView(),
         '/agregarPaciente': (context) => AgregarPersonaView()
