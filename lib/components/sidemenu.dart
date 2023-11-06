@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestiontareas/colores.dart';
 
 class SideMenu extends StatelessWidget {
   String currentPage; // La página actual
@@ -25,7 +26,7 @@ class SideMenu extends StatelessWidget {
             ),
           ),
           Container(
-            color: currentPage == 'general' ? Colors.blue : Colors.transparent,
+            color: currentPage == 'general' ? primaryColor : Colors.transparent,
             child: ListTile(
               leading: const Icon(Icons.dashboard, color: Colors.white),
               title: const Text(
@@ -43,7 +44,7 @@ class SideMenu extends StatelessWidget {
           ),
           Container(
             color:
-                currentPage == 'pacientes' ? Colors.blue : Colors.transparent,
+                currentPage == 'pacientes' ? primaryColor : Colors.transparent,
             child: ListTile(
               leading: const Icon(Icons.people, color: Colors.white),
               title: const Text(

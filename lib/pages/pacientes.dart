@@ -56,7 +56,7 @@ class _PacientesDataTableState extends State<PacientesDataTable> {
           child: Row(
             children: [
               SizedBox(
-                  height: 50,
+                  height: 60,
                   child: ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pushNamed(context, '/agregarPaciente');
@@ -159,7 +159,7 @@ List<Paciente> getListaPacientes() {
   // Aquí debes cargar la lista de pacientes desde tus datos.
   // Ejemplo de cómo llenar la lista:
   return [
-    Paciente(nombre: "Diego Aguilera", edad: 30),
+    Paciente(nombre: "Diego Aguilera", edad: 23),
     Paciente(nombre: "Ana García", edad: 45),
     Paciente(nombre: "Juan Pérez", edad: 32),
     Paciente(nombre: "María López", edad: 28),
