@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gestiontareas/pages/profesional.dart';
 
 import '../colores.dart';
 

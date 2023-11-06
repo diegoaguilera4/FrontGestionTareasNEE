@@ -53,12 +53,31 @@ class _PacientesDataTableState extends State<PacientesDataTable> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: TextField(
-            onChanged: filterPacientes,
-            decoration: const InputDecoration(
-              labelText: 'Buscar por nombre',
-              prefixIcon: Icon(Icons.search),
-            ),
+          child: Row(
+            children: [
+              SizedBox(
+                  height: 50,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/agregarPaciente');
+                    },
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                    icon: const Icon(Icons.person_add),
+                    label: const Text('Agregar Paciente'),
+                  )),
+              const SizedBox(
+                  width: 16.0), // Espacio entre el botón y el campo de búsqueda
+              Flexible(
+                child: TextField(
+                  onChanged: filterPacientes,
+                  decoration: const InputDecoration(
+                    labelText: 'Buscar por nombre',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(
