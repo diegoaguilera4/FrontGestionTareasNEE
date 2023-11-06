@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         // Página de inicio
         '/': (context) => LoginPage(), // Página de inicio de sesión
         '/profesional': (context) => const ProfesionalView(),
-        '/pacientes': (context) => const PacientesView()
+        '/pacientes': (context) => PacientesView()
         // Define otras rutas aquí si es necesario
       },
     );

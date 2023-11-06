@@ -17,7 +17,7 @@ class ProfesionalView extends StatelessWidget {
         currentPage: 'general',
       ), // Usa la clase SideMenu como el Drawer
       body: const Center(
-        child: Text('Contenido de la Vista de Administrador'),
+        child: Text('Dashboard'),
       ),
     );
   }
