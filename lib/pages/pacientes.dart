@@ -123,7 +123,7 @@ class PacientesDataSource extends DataTableSource {
           children: [
             IconButton(
               icon: const Icon(
-                Icons.edit,
+                Icons.edit_note,
                 color: primaryColor,
               ),
               onPressed: () {

@@ -21,10 +21,9 @@ class MyApp extends StatelessWidget {
         textTheme:
             GoogleFonts.montserratTextTheme(Theme.of(context).textTheme).apply(
           bodyColor: secondaryColor,
-          displayColor: secondaryColor, // Configura la fuente secundaria aquí
+          displayColor: secondaryColor,
         ),
         canvasColor: secondaryColor,
-        // Tu configuración de tema aquí
       ),
       initialRoute: '/', // Página de inicio
       routes: {
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
         '/profesional': (context) => const ProfesionalView(),
         '/pacientes': (context) => PacientesView(),
         '/agregarPaciente': (context) => AgregarPersonaView()
-        // Define otras rutas aquí si es necesario
       },
     );
   }
