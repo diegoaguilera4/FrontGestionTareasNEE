@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/pages/agregarPaciente.dart';
 import 'package:gestiontareas/pages/login.dart';
+import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
 import 'package:gestiontareas/pages/profesional.dart';
 import 'package:gestiontareas/pages/registro.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         '/registro': (context) => RegistroView(),
         '/profesional': (context) => const ProfesionalView(),
         '/pacientes': (context) => PacientesView(),
-        '/agregarPaciente': (context) => AgregarPersonaView()
+        '/agregarPaciente': (context) => AgregarPersonaView(),
+        '/tareas':(context) => TaskView(),
       },
     );
   }
