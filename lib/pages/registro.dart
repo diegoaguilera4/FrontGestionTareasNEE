@@ -53,17 +53,10 @@ class RegistroView extends StatelessWidget {
     if (nombreController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
-      if (selectedRole == 'Profesional') {
-        var url = Uri.parse('http://localhost:3000/profesional/add');
-        var response = await http.post(url,
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode(userData));
-      } else {
-        var url = Uri.parse('http://localhost:3000/usuario/add');
-        var response = await http.post(url,
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode(userData));
-      }
+      var url = Uri.parse('http://localhost:3000/usuario/add');
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(userData));
     }
   }
 

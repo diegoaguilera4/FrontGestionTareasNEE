@@ -1,21 +1,57 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
-
+import 'package:gestiontareas/pages/profesional.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import '../responsive.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
+  @override
+  _LoginViewState createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  late SharedPreferences prefs;
 
-  void _login(BuildContext context) {
-    final String email = emailController.text;
-    final String password = passwordController.text;
+  @override
+  void initState() {
+    super.initState();
+    initSharedPref();
+  }
 
-    // Realiza la lógica de autenticación aquí, por ejemplo, puedes validar los campos y autenticar al usuario.
-    // Puedes mostrar un mensaje de error si la autenticación falla o navegar a la página principal si tiene éxito.
+  void initSharedPref() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
-    // Supongamos que la autenticación fue exitosa y deseas navegar a la página de inicio.
-    Navigator.pushNamed(context, '/profesional');
+  Future<void> _login(BuildContext context) async {
+    var reqBody = {
+      'email': emailController.text,
+      'contrasenia': passwordController.text,
+    };
+
+    var response = await http.post(
+      Uri.parse('http://localhost:3000/usuario/login'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(reqBody),
+    );
+
+    print(response.body);
+
+    var jsonResponse = jsonDecode(response.body);
+    if (jsonResponse['status']) {
+      var myToken = jsonResponse['token'];
+      prefs.setString('token', myToken);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfesionalView(token: myToken)));
+    } else {
+      print('error');
+    }
   }
 
   @override
