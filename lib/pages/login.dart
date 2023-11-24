@@ -39,18 +39,30 @@ class _LoginViewState extends State<LoginView> {
       body: jsonEncode(reqBody),
     );
 
-    print(response.body);
-
     var jsonResponse = jsonDecode(response.body);
     if (jsonResponse['status']) {
       var myToken = jsonResponse['token'];
       prefs.setString('token', myToken);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProfesionalView(token: myToken)));
+
+      if (jsonResponse['rol'] == 'Profesional') {
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProfesionalView(token: myToken)));
+      } else {
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/tareas');
+      }
     } else {
-      print('error');
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ingrese datos válidos'),
+          backgroundColor:
+              buttonColor1, // Puedes ajustar el color según tus preferencias
+        ),
+      );
     }
   }
 

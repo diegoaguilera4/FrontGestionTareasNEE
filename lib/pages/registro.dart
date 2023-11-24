@@ -64,7 +64,7 @@ class RegistroView extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(mensaje),
-        backgroundColor: Colors.red,
+        backgroundColor: buttonColor1,
       ),
     );
   }
