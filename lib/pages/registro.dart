@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 import '../responsive.dart';
 
@@ -8,19 +11,69 @@ class RegistroView extends StatelessWidget {
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController vinculacionController = TextEditingController();
-  String selectedRole = ''; // Variable para almacenar el rol seleccionado
+  String selectedRole = 'Profesional'; // Establecer un valor predeterminado
 
-  void _registro(BuildContext context) {
+  void _registro(BuildContext context) async {
     final String nombre = nombreController.text;
     final String email = emailController.text;
     final String password = passwordController.text;
-    final String vinculacion = vinculacionController.text;
 
-    // Realiza la lógica de registro aquí, y utiliza la variable 'selectedRole' para determinar el rol seleccionado.
+    // Verificar condiciones del nombre
+    if (nombre.isEmpty) {
+      _mostrarError(context, 'Ingrese un nombre válido.');
+      return;
+    }
 
-    // Supongamos que el registro fue exitoso y deseas navegar a la página de inicio.
-    Navigator.pushNamed(context, '/profesional');
+    // Verificar formato de email
+    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+        .hasMatch(email)) {
+      _mostrarError(context, 'Ingrese un correo electrónico válido.');
+      return;
+    }
+
+    // Verificar longitud de la contraseña
+    if (password.length < 8) {
+      _mostrarError(context, 'La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
+    Map<String, String> userData = {
+      'nombre': nombre,
+      'email': email,
+      'contrasenia': password,
+      'rol': selectedRole,
+    };
+
+    await _enviarRegistroAlServidor(userData);
+
+    Navigator.pushNamed(context, '/');
+  }
+
+  Future<void> _enviarRegistroAlServidor(Map<String, String> userData) async {
+    if (nombreController.text.isNotEmpty &&
+        emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
+      if (selectedRole == 'Profesional') {
+        var url = Uri.parse('http://localhost:3000/profesional/add');
+        var response = await http.post(url,
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(userData));
+      } else {
+        var url = Uri.parse('http://localhost:3000/usuario/add');
+        var response = await http.post(url,
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(userData));
+      }
+    }
+  }
+
+  void _mostrarError(BuildContext context, String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensaje),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -55,14 +108,12 @@ class RegistroView extends StatelessWidget {
             ),
             child: Row(
               children: <Widget>[
-                if (Responsive.isDesktop(
-                    context)) // Comprueba si la pantalla es de escritorio
+                if (Responsive.isDesktop(context))
                   Container(
                     constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width *
-                            0.7), // Establece un ancho máximo
+                        maxWidth: MediaQuery.of(context).size.width * 0.7),
                     child: FractionallySizedBox(
-                      widthFactor: 0.7, // Establece el ancho al 70%
+                      widthFactor: 0.7,
                       child: Image.asset(
                         'images/login.jpg',
                         fit: BoxFit.contain,
@@ -111,17 +162,13 @@ class RegistroView extends StatelessWidget {
                             style: TextStyle(fontSize: 16.0),
                           ),
                           const SizedBox(width: 50),
-                          SelectRol(),
+                          SelectRol(
+                            onRolSelected: (selectedRol) {
+                              this.selectedRole = selectedRol;
+                            },
+                            initialRol: selectedRole,
+                          ),
                         ],
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: vinculacionController,
-                        decoration: const InputDecoration(
-                          labelText: 'Código vinculación',
-                          border: OutlineInputBorder(),
-                        ),
-                        obscureText: true,
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -159,12 +206,27 @@ class RegistroView extends StatelessWidget {
 }
 
 class SelectRol extends StatefulWidget {
+  final Function(String) onRolSelected;
+  final String initialRol;
+
+  const SelectRol({
+    Key? key,
+    required this.onRolSelected,
+    required this.initialRol,
+  }) : super(key: key);
+
   @override
   _SelectRolState createState() => _SelectRolState();
 }
 
 class _SelectRolState extends State<SelectRol> {
-  String dropdownValue = 'Profesional'; // Establece el valor inicial
+  late String dropdownValue;
+
+  @override
+  void initState() {
+    super.initState();
+    dropdownValue = widget.initialRol;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,18 +236,18 @@ class _SelectRolState extends State<SelectRol> {
       elevation: 16,
       style: GoogleFonts.montserrat(
         textStyle: const TextStyle(
-          color: secondaryColor, // Cambia el color del texto
+          color: secondaryColor,
         ),
       ),
       underline: Container(
         height: 2,
         color: secondaryColor,
       ),
-      dropdownColor: Colors.white, // Cambia el fondo a blanco
+      dropdownColor: Colors.white,
       onChanged: (String? value) {
-        // Esto se llama cuando el usuario selecciona un elemento.
         setState(() {
           dropdownValue = value!;
+          widget.onRolSelected(dropdownValue);
         });
       },
       items: ['Profesional', 'Padre', 'Profesor', 'Paciente']
@@ -196,9 +258,9 @@ class _SelectRolState extends State<SelectRol> {
             value,
             style: GoogleFonts.montserrat(
               textStyle: const TextStyle(
-                  color: secondaryColor,
-                  fontSize: 16 // Cambia el color del texto
-                  ),
+                color: secondaryColor,
+                fontSize: 16,
+              ),
             ),
           ),
         );
