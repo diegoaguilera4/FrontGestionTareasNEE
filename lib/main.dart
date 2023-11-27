@@ -27,14 +27,42 @@ class MyApp extends StatelessWidget {
         canvasColor: secondaryColor,
       ),
       initialRoute: '/', // Página de inicio
-      routes: {
-        // Página de inicio
-        '/': (context) => LoginView(), // Página de inicio de sesión
-        '/registro': (context) => RegistroView(),
-        '/profesional': (context) => const ProfesionalView(),
-        '/pacientes': (context) => PacientesView(),
-        '/agregarPaciente': (context) => AgregarPersonaView(),
-        '/tareas':(context) => TaskView(),
+      onGenerateRoute: (settings) {
+        // Si pasas al constructor de la ruta argumentos, se encontrarán en settings.arguments.
+        // En este caso, extrae el token que pasaste con Navigator.pushNamed().
+        final args = settings.arguments;
+
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (context) => LoginView());
+          case '/registro':
+            return MaterialPageRoute(builder: (context) => RegistroView());
+          case '/profesional':
+            // Valida si los argumentos son correctos antes de acceder a ellos.
+            if (args is String) {
+              return MaterialPageRoute(
+                builder: (context) => ProfesionalView(token: args),
+              );
+            }
+          // Si los argumentos no son del tipo correcto, redirige a una ruta de error.
+          case '/pacientes':
+            if (args is String) {
+              return MaterialPageRoute(
+                builder: (context) => PacientesView(token: args),
+              );
+            }
+          case '/agregarPaciente':
+            return MaterialPageRoute(
+                builder: (context) => AgregarPersonaView());
+          case '/tareas':
+            if (args is String) {
+              return MaterialPageRoute(
+                builder: (context) => TaskView(token: args),
+              );
+            }
+          default:
+          // Si no hay ninguna ruta con el nombre que has pasado, entonces usa esta función para manejarlo.
+        }
       },
     );
   }

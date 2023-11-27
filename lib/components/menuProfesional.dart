@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SideMenu extends StatelessWidget {
+import '../pages/login.dart';
+
+class MenuProfesional extends StatelessWidget {
   String currentPage; // La página actual
-
-  SideMenu({required this.currentPage});
+  final String token;
+  MenuProfesional({super.key, required this.currentPage, required this.token});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -37,7 +40,7 @@ class SideMenu extends StatelessWidget {
               ),
               onTap: () {
                 // Navega a la página de panel de control y actualiza currentPage
-                Navigator.pushNamed(context, '/profesional');
+                Navigator.pushNamed(context, '/profesional', arguments: token);
                 currentPage = 'general';
               },
             ),
@@ -55,7 +58,7 @@ class SideMenu extends StatelessWidget {
               ),
               onTap: () {
                 // Navega a la página de panel de control y actualiza currentPage
-                Navigator.pushNamed(context, '/pacientes');
+                Navigator.pushNamed(context, '/pacientes', arguments: token);
                 currentPage = 'pacientes';
               },
             ),
@@ -63,7 +66,7 @@ class SideMenu extends StatelessWidget {
 
           // Agrega más elementos de menú según tus necesidades
 
-          Divider(), // Línea divisoria
+          const Divider(), // Línea divisoria
 
           Container(
             color: currentPage == 'cerrarSesion'
@@ -77,11 +80,16 @@ class SideMenu extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              onTap: () {
+              onTap: () async {
                 // Agrega la lógica para cerrar la sesión
-                // Esto puede incluir limpiar datos de sesión y redirigir al inicio de sesión
-                Navigator.pushNamed(
-                    context, '/'); // Redirige a la página de inicio de sesión
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.remove('token'); // Elimina el token almacenado
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            LoginView())); // Redirige a la página de inicio de sesión
               },
             ),
           ),

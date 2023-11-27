@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:gestiontareas/pages/profesional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -46,13 +47,10 @@ class _LoginViewState extends State<LoginView> {
 
       if (jsonResponse['rol'] == 'Profesional') {
         // ignore: use_build_context_synchronously
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProfesionalView(token: myToken)));
+         Navigator.pushNamed(context, '/profesional', arguments: myToken);
       } else {
         // ignore: use_build_context_synchronously
-        Navigator.pushNamed(context, '/tareas');
+        Navigator.pushNamed(context, '/tareas', arguments: myToken);
       }
     } else {
       // ignore: use_build_context_synchronously

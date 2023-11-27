@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
-import '../components/sidemenu.dart';
+import '../components/menuProfesional.dart';
 
 class PacientesView extends StatelessWidget {
+  final String token;
+
+  const PacientesView({super.key, required this.token});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +13,7 @@ class PacientesView extends StatelessWidget {
         title: const Text('Pacientes'),
         backgroundColor: secondaryColor,
       ),
-      drawer: SideMenu(currentPage: 'pacientes'),
+      drawer: MenuProfesional(currentPage: 'pacientes', token: token),
       body: PacientesDataTable(),
     );
   }

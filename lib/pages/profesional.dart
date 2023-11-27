@@ -1,24 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/login.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import '../components/sidemenu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../components/menuProfesional.dart';
 
 class ProfesionalView extends StatefulWidget {
-  final token;
-  const ProfesionalView({Key? key, this.token}) : super(key: key);
+  final String token;
+
+  const ProfesionalView({Key? key, required this.token}) : super(key: key);
 
   @override
-  State<ProfesionalView> createState() => _ProfesionalView();
+  State<ProfesionalView> createState() => _ProfesionalViewState();
 }
 
-class _ProfesionalView extends State<ProfesionalView> {
-  late String? email;
+class _ProfesionalViewState extends State<ProfesionalView> {
+  String? email;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
-    email = jwtDecodedToken['email'];
+    _initializeEmail();
+  }
+
+  // Función para inicializar el campo 'email'
+  void _initializeEmail() {
+    try {
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+      email = jwtDecodedToken['email'];
+    } catch (e) {
+      // Manejar cualquier error al decodificar el token, por ejemplo, token no válido.
+      print('Error al decodificar el token: $e');
+      // Puedes manejar el error de otra manera, como cerrar sesión y volver a la pantalla de inicio.
+      _handleLogout();
+    }
+  }
+
+  // Función para cerrar sesión
+  Future<void> _handleLogout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // Elimina el token almacenado
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                LoginView())); // Navega a la pantalla de inicio de sesión
   }
 
   @override
@@ -27,10 +55,17 @@ class _ProfesionalView extends State<ProfesionalView> {
       appBar: AppBar(
         title: const Text('Vista Profesional'),
         backgroundColor: secondaryColor,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: _handleLogout, // Llama a la función de cerrar sesión
+          ),
+        ],
       ),
-      drawer: SideMenu(
+      drawer: MenuProfesional(
         currentPage: 'general',
-      ), // Usa la clase SideMenu como el Drawer
+        token: widget.token,
+      ),
       body: Center(
         child: Text(email ?? 'Correo no disponible'),
       ),

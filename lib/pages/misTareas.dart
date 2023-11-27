@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/components/cartaTarea.dart';
-import 'package:gestiontareas/components/sidemenu.dart';
+import 'package:gestiontareas/components/menuPaciente.dart';
 import 'package:gestiontareas/responsive.dart';
 
 class TaskView extends StatefulWidget {
+  final String token;
+
+  const TaskView({super.key, required this.token});
   @override
   _TaskViewState createState() => _TaskViewState();
 }
@@ -43,7 +46,7 @@ class _TaskViewState extends State<TaskView> {
         title: const Text('Tareas asignadas'),
         backgroundColor: secondaryColor,
       ),
-      drawer: SideMenu(currentPage: ''),
+      drawer: MenuPaciente(currentPage: '', token: widget.token),
       body: _buildBody(),
     );
   }
