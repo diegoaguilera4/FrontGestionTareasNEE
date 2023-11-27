@@ -5,7 +5,8 @@ import '../components/menuProfesional.dart';
 class PacientesView extends StatelessWidget {
   final String token;
 
-  const PacientesView({super.key, required this.token});
+  const PacientesView({Key? key, required this.token}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +15,111 @@ class PacientesView extends StatelessWidget {
         backgroundColor: secondaryColor,
       ),
       drawer: MenuProfesional(currentPage: 'pacientes', token: token),
-      body: PacientesDataTable(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (MediaQuery.of(context).size.width < 768)
+            Padding(
+              padding: const EdgeInsets.only(left: 5.0, top: 16.0, right: 5.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/agregarPaciente',
+                              arguments: token);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor),
+                        icon: const Icon(Icons.person_add),
+                        label: const Text('Agregar Paciente'),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: SizedBox(
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          // Agrega la lógica para "Nueva Sesión"
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Nueva Sesión'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 16.0), // Espaciado entre las filas
+          Row(
+            children: [
+              if (MediaQuery.of(context).size.width < 768 == false)
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: SizedBox(
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/agregarPaciente',
+                            arguments: token);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor),
+                      icon: const Icon(Icons.person_add),
+                      label: const Text('Agregar Paciente'),
+                    ),
+                  ),
+                ),
+              const SizedBox(width: 16.0),
+              if (MediaQuery.of(context).size.width < 768 == false)
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: SizedBox(
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        // Agrega la lógica para "Nueva Sesión"
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Nueva Sesión'),
+                    ),
+                  ),
+                ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: TextField(
+                    onChanged: (query) {
+                      // Puedes realizar búsquedas aquí
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Buscar por nombre',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0), // Espaciado entre las filas
+          Expanded(
+            child: SingleChildScrollView(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: PacientesDataTable(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -25,14 +130,12 @@ class PacientesDataTable extends StatefulWidget {
 }
 
 class _PacientesDataTableState extends State<PacientesDataTable> {
-  List<Paciente> pacientes =
-      []; // Debes llenar esta lista con los datos de tus pacientes
+  List<Paciente> pacientes = [];
   List<Paciente> filteredPacientes = [];
 
   @override
   void initState() {
     super.initState();
-    // Llena la lista 'pacientes' con los datos de tus pacientes
     pacientes = getListaPacientes();
     filteredPacientes.addAll(pacientes);
   }
@@ -52,53 +155,13 @@ class _PacientesDataTableState extends State<PacientesDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              SizedBox(
-                  height: 60,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/agregarPaciente');
-                    },
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
-                    icon: const Icon(Icons.person_add),
-                    label: const Text('Agregar Paciente'),
-                  )),
-              const SizedBox(
-                  width: 16.0), // Espacio entre el botón y el campo de búsqueda
-              Flexible(
-                child: TextField(
-                  onChanged: filterPacientes,
-                  decoration: const InputDecoration(
-                    labelText: 'Buscar por nombre',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: PaginatedDataTable(
-                columns: const [
-                  DataColumn(label: Text('Nombre')),
-                  DataColumn(label: Text('Edad')),
-                  DataColumn(label: Text('Opciones')),
-                ],
-                source: PacientesDataSource(filteredPacientes),
-              ),
-            ),
-          ),
-        ),
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text('Nombre')),
+        DataColumn(label: Text('Edad')),
+        DataColumn(label: Text('Opciones')),
       ],
+      source: PacientesDataSource(filteredPacientes),
     );
   }
 }

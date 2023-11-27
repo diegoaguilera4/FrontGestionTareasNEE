@@ -1,17 +1,31 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:http/http.dart' as http;
 
-class AgregarPersonaView extends StatefulWidget {
+class AgregarPacienteView extends StatefulWidget {
+  final String token;
+
+  AgregarPacienteView({Key? key, required this.token}) : super(key: key);
+
   @override
-  _AgregarPersonaViewState createState() => _AgregarPersonaViewState();
+  _AgregarPacienteViewState createState() => _AgregarPacienteViewState();
 }
 
-class _AgregarPersonaViewState extends State<AgregarPersonaView> {
+class _AgregarPacienteViewState extends State<AgregarPacienteView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nombreController = TextEditingController();
-  final TextEditingController edadController = TextEditingController();
-  final TextEditingController fechaNacimientoController =
-      TextEditingController();
+  final TextEditingController rutController = TextEditingController();
+
+  Future<void> _crearPaciente(Map<String, String> pacienteData) async {
+    if (nombreController.text.isNotEmpty && rutController.text.isNotEmpty) {
+      var url = Uri.parse('http://localhost:3000/paciente/add');
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(pacienteData));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +54,7 @@ class _AgregarPersonaViewState extends State<AgregarPersonaView> {
               Container(
                 padding: const EdgeInsets.all(16.0),
                 child: const Text(
-                  'Identificación',
+                  'Nuevo paciente',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -48,7 +62,7 @@ class _AgregarPersonaViewState extends State<AgregarPersonaView> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50.0),
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -70,35 +84,18 @@ class _AgregarPersonaViewState extends State<AgregarPersonaView> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        controller: edadController,
+                        controller: rutController,
                         decoration: const InputDecoration(
-                          labelText: 'Edad',
+                          labelText: 'RUT',
                           border: OutlineInputBorder(),
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 16.0),
                         ),
-                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Por favor, ingrese la edad';
+                            return 'Por favor, ingrese el RUT';
                           }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: fechaNacimientoController,
-                        decoration: const InputDecoration(
-                          labelText: 'Fecha de Nacimiento',
-                          border: OutlineInputBorder(),
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16.0),
-                        ),
-                        keyboardType: TextInputType.datetime,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor, ingrese la fecha de nacimiento';
-                          }
+                          // Puedes agregar validaciones adicionales para el RUT si es necesario
                           return null;
                         },
                       ),
@@ -106,14 +103,15 @@ class _AgregarPersonaViewState extends State<AgregarPersonaView> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // Aquí debes guardar los datos de la persona en tu base de datos o lista
-                            final nuevaPersona = Persona(
-                              nombre: nombreController.text,
-                              edad: int.parse(edadController.text),
-                              fechaNacimiento: fechaNacimientoController.text,
-                            );
+                            // Aquí debes guardar los datos de la Paciente en tu base de datos o lista
+
+                            Map<String, String> nuevoPaciente = {
+                              'nombre': nombreController.text,
+                              'rut': rutController.text,
+                            };
+                            _crearPaciente(nuevoPaciente);
                             // Luego, puedes navegar de regreso a la vista de pacientes
-                            Navigator.pop(context, nuevaPersona);
+                            Navigator.pop(context);
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -132,14 +130,12 @@ class _AgregarPersonaViewState extends State<AgregarPersonaView> {
   }
 }
 
-class Persona {
+class Paciente {
   final String nombre;
-  final int edad;
-  final String fechaNacimiento;
+  final String rut;
 
-  Persona({
+  Paciente({
     required this.nombre,
-    required this.edad,
-    required this.fechaNacimiento,
+    required this.rut,
   });
 }

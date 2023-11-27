@@ -52,8 +52,11 @@ class MyApp extends StatelessWidget {
               );
             }
           case '/agregarPaciente':
-            return MaterialPageRoute(
-                builder: (context) => AgregarPersonaView());
+            if (args is String) {
+              return MaterialPageRoute(
+                builder: (context) => AgregarPacienteView(token: args),
+              );
+            }
           case '/tareas':
             if (args is String) {
               return MaterialPageRoute(
