@@ -70,7 +70,7 @@ class MenuProfesional extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => PacientesView(token: token),
-                    settings: RouteSettings(name: '/profesional'),
+                    settings: RouteSettings(name: '/pacientes'),
                   ),
                 );
                 currentPage = 'pacientes';

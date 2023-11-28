@@ -44,9 +44,10 @@ class _LoginViewState extends State<LoginView> {
     var jsonResponse = jsonDecode(response.body);
     if (jsonResponse['status']) {
       var myToken = jsonResponse['token'];
+      var rol = jsonResponse['rol'];
       prefs.setString('token', myToken);
-
-      if (jsonResponse['rol'] == 'Profesional') {
+      prefs.setString('rol', rol);
+      if (rol == 'Profesional') {
         // ignore: use_build_context_synchronously
         Navigator.push(
           context,

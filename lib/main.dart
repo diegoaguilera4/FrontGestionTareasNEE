@@ -6,17 +6,41 @@ import 'package:gestiontareas/pages/pacientes.dart';
 import 'package:gestiontareas/pages/profesional.dart';
 import 'package:gestiontareas/pages/registro.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
+
 import 'colores.dart';
 
-void main() {
+void main() async {
   setPathUrlStrategy();
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+  String? lastRoute = prefs.getString('currentRoute');
+  //obtener atributo rol del token
+  if (token != null) {
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+    String rol = jwtDecodedToken['rol'];
+    if (rol == 'Profesional') {
+      lastRoute = '/profesional';
+    } else {
+      lastRoute = '/tareas';
+    }
+  }
+
+  runApp(MyApp(token: token, initialRoute: lastRoute));
 }
 
 class MyApp extends StatelessWidget {
+  final String? token;
+  final String? initialRoute;
+
+  const MyApp({Key? key, this.token, this.initialRoute}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    bool isTokenValid = token != null && JwtDecoder.isExpired(token!) == false;
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -28,9 +52,15 @@ class MyApp extends StatelessWidget {
         ),
         canvasColor: secondaryColor,
       ),
-      initialRoute: '/', // Página de inicio
+      initialRoute: isTokenValid ? initialRoute ?? '/' : '/',
+      home: isTokenValid
+          ? (initialRoute == '/tareas'
+              ? TaskView(token: token!)
+              : (initialRoute == '/profesional'
+                  ? ProfesionalView(token: token!)
+                  : Container()))
+          : LoginView(),
       onGenerateRoute: (settings) {
-        // Si pasas al constructor de la ruta argumentos, se encontrarán en settings.arguments.
         final args = settings.arguments;
 
         switch (settings.name) {
@@ -39,35 +69,49 @@ class MyApp extends StatelessWidget {
           case '/registro':
             return MaterialPageRoute(builder: (context) => RegistroView());
           case '/profesional':
-            // Valida si los argumentos son correctos antes de acceder a ellos.
             if (args is String) {
               return MaterialPageRoute(
                 builder: (context) => ProfesionalView(token: args),
               );
             }
-          // Si los argumentos no son del tipo correcto, redirige a una ruta de error.
+            break;
           case '/pacientes':
             if (args is String) {
               return MaterialPageRoute(
                 builder: (context) => PacientesView(token: args),
               );
             }
+            break;
           case '/agregarPaciente':
             if (args is String) {
               return MaterialPageRoute(
                 builder: (context) => AgregarPacienteView(token: args),
               );
             }
+            break;
           case '/tareas':
             if (args is String) {
               return MaterialPageRoute(
                 builder: (context) => TaskView(token: args),
               );
             }
+            break;
           default:
-          // Si no hay ninguna ruta con el nombre que has pasado, entonces usa esta función para manejarlo.
+            return MaterialPageRoute(builder: (context) => ErrorView());
         }
       },
+    );
+  }
+}
+
+class ErrorView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Error')),
+      body: Center(
+        child: Text('Ruta no encontrada'),
+      ),
     );
   }
 }
