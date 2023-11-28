@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 import '../responsive.dart';
+import 'login.dart';
 
 class RegistroView extends StatelessWidget {
   final TextEditingController nombreController = TextEditingController();
@@ -46,7 +47,13 @@ class RegistroView extends StatelessWidget {
 
     await _enviarRegistroAlServidor(userData);
 
-    Navigator.pushNamed(context, '/');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginView(),
+        settings: RouteSettings(name: '/'),
+      ),
+    );
   }
 
   Future<void> _enviarRegistroAlServidor(Map<String, String> userData) async {
@@ -181,7 +188,13 @@ class RegistroView extends StatelessWidget {
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   buttonColor1),
                             ),
-                            onPressed: () => Navigator.pushNamed(context, '/'),
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginView(),
+                                settings: RouteSettings(name: '/'),
+                              ),
+                            ),
                             child: const Text('Cancelar'),
                           ),
                         ],

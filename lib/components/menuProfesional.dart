@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/pacientes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/login.dart';
+import '../pages/profesional.dart';
 
 class MenuProfesional extends StatelessWidget {
   String currentPage; // La página actual
@@ -40,7 +42,13 @@ class MenuProfesional extends StatelessWidget {
               ),
               onTap: () {
                 // Navega a la página de panel de control y actualiza currentPage
-                Navigator.pushNamed(context, '/profesional', arguments: token);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfesionalView(token: token),
+                    settings: RouteSettings(name: '/profesional'),
+                  ),
+                );
                 currentPage = 'general';
               },
             ),
@@ -58,7 +66,13 @@ class MenuProfesional extends StatelessWidget {
               ),
               onTap: () {
                 // Navega a la página de panel de control y actualiza currentPage
-                Navigator.pushNamed(context, '/pacientes', arguments: token);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PacientesView(token: token),
+                    settings: RouteSettings(name: '/profesional'),
+                  ),
+                );
                 currentPage = 'pacientes';
               },
             ),
@@ -84,12 +98,14 @@ class MenuProfesional extends StatelessWidget {
                 // Agrega la lógica para cerrar la sesión
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.remove('token'); // Elimina el token almacenado
-                // ignore: use_build_context_synchronously
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            LoginView())); // Redirige a la página de inicio de sesión
+                // Redirige a la página de inicio de sesión
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginView(),
+                    settings: RouteSettings(name: '/'),
+                  ),
+                );
               },
             ),
           ),

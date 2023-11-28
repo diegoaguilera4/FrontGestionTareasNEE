@@ -1,11 +1,69 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/agregarPaciente.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:http/http.dart' as http;
+
+import '../colores.dart';
 import '../components/menuProfesional.dart';
 
-class PacientesView extends StatelessWidget {
+class PacientesView extends StatefulWidget {
   final String token;
 
   const PacientesView({Key? key, required this.token}) : super(key: key);
+
+  @override
+  _PacientesViewState createState() => _PacientesViewState();
+}
+
+class _PacientesViewState extends State<PacientesView> {
+  late List<String>? pacientesID = [];
+  late Future<List<Paciente>> _pacientesFuture;
+  late _PacientesDataTableState _pacientesDataTableState;
+
+  @override
+  void initState() {
+    super.initState();
+    _pacientesDataTableState = _PacientesDataTableState();
+    _initializePacientes();
+  }
+
+  void _initializePacientes() async {
+    try {
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+      List<dynamic>? pacientesDynamic = jwtDecodedToken['pacientes'];
+      if (pacientesDynamic != null) {
+        pacientesID =
+            pacientesDynamic.map((dynamic item) => item.toString()).toList();
+        _pacientesFuture = _fetchPacientes();
+      }
+    } catch (e) {
+      print('Error al decodificar el token: $e');
+    }
+  }
+
+  Future<List<Paciente>> _fetchPacientes() async {
+    try {
+      List<Paciente> fetchedPacientes = await getListaPacientes(pacientesID!);
+      return fetchedPacientes;
+    } catch (e) {
+      print('Error al obtener la lista de pacientes: $e');
+      throw e;
+    }
+  }
+
+  void filterPacientes(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _pacientesDataTableState.clearFilter();
+      } else {
+        _pacientesDataTableState.filterPacientes(query);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +72,7 @@ class PacientesView extends StatelessWidget {
         title: const Text('Pacientes'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuProfesional(currentPage: 'pacientes', token: token),
+      drawer: MenuProfesional(currentPage: 'pacientes', token: widget.token),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -28,8 +86,14 @@ class PacientesView extends StatelessWidget {
                       height: 50,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/agregarPaciente',
-                              arguments: token);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AgregarPacienteView(token: widget.token),
+                              settings: RouteSettings(name: '/agregarPaciente'),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: primaryColor),
@@ -66,8 +130,14 @@ class PacientesView extends StatelessWidget {
                     height: 50,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/agregarPaciente',
-                            arguments: token);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                AgregarPacienteView(token: widget.token),
+                            settings: RouteSettings(name: '/agregarPaciente'),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor),
@@ -99,6 +169,7 @@ class PacientesView extends StatelessWidget {
                   child: TextField(
                     onChanged: (query) {
                       // Puedes realizar búsquedas aquí
+                      filterPacientes(query);
                     },
                     decoration: const InputDecoration(
                       labelText: 'Buscar por nombre',
@@ -109,13 +180,29 @@ class PacientesView extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16.0), // Espaciado entre las filas
+          const SizedBox(height: 16.0),
           Expanded(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: PacientesDataTable(),
-              ),
+            child: FutureBuilder(
+              future: _pacientesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  List<Paciente> pacientes = snapshot.data as List<Paciente>;
+                  return SingleChildScrollView(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: pacientes != null
+                          ? PacientesDataTable(
+                              pacientes: pacientes,
+                              state: _pacientesDataTableState)
+                          : Center(child: CircularProgressIndicator()),
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ],
@@ -125,30 +212,45 @@ class PacientesView extends StatelessWidget {
 }
 
 class PacientesDataTable extends StatefulWidget {
+  final List<Paciente> pacientes;
+  final _PacientesDataTableState state;
+
+  PacientesDataTable({required this.pacientes, required this.state});
+
   @override
-  _PacientesDataTableState createState() => _PacientesDataTableState();
+  _PacientesDataTableState createState() => state;
 }
 
 class _PacientesDataTableState extends State<PacientesDataTable> {
-  List<Paciente> pacientes = [];
+  late List<Paciente> pacientes;
   List<Paciente> filteredPacientes = [];
+
+  _PacientesDataTableState();
 
   @override
   void initState() {
     super.initState();
-    pacientes = getListaPacientes();
-    filteredPacientes.addAll(pacientes);
+    pacientes = widget.pacientes;
+    // Inicializa filteredPacientes con la lista completa al inicio
+    filteredPacientes = widget.pacientes;
+  }
+
+  void clearFilter() {
+    setState(() {
+      // Restaura filteredPacientes a la lista completa
+      filteredPacientes = List.from(pacientes);
+    });
   }
 
   void filterPacientes(String query) {
     setState(() {
       if (query.isEmpty) {
-        filteredPacientes.clear();
-        filteredPacientes.addAll(pacientes);
+        clearFilter();
       } else {
-        filteredPacientes.clear();
-        filteredPacientes.addAll(pacientes.where((paciente) =>
-            paciente.nombre.toLowerCase().contains(query.toLowerCase())));
+        filteredPacientes = pacientes
+            .where((paciente) =>
+                paciente.nombre.toLowerCase().contains(query.toLowerCase()))
+            .toList();
       }
     });
   }
@@ -158,19 +260,12 @@ class _PacientesDataTableState extends State<PacientesDataTable> {
     return PaginatedDataTable(
       columns: const [
         DataColumn(label: Text('Nombre')),
-        DataColumn(label: Text('Edad')),
+        DataColumn(label: Text('Rut')),
         DataColumn(label: Text('Opciones')),
       ],
       source: PacientesDataSource(filteredPacientes),
     );
   }
-}
-
-class Paciente {
-  final String nombre;
-  final int edad;
-
-  Paciente({required this.nombre, required this.edad});
 }
 
 class PacientesDataSource extends DataTableSource {
@@ -184,7 +279,7 @@ class PacientesDataSource extends DataTableSource {
     return DataRow(
       cells: [
         DataCell(Text(paciente.nombre)),
-        DataCell(Text(paciente.edad.toString())),
+        DataCell(Text(paciente.rut)),
         DataCell(Row(
           children: [
             IconButton(
@@ -221,29 +316,48 @@ class PacientesDataSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-List<Paciente> getListaPacientes() {
-  // Aquí debes cargar la lista de pacientes desde tus datos.
-  // Ejemplo de cómo llenar la lista:
-  return [
-    Paciente(nombre: "Diego Aguilera", edad: 23),
-    Paciente(nombre: "Ana García", edad: 45),
-    Paciente(nombre: "Juan Pérez", edad: 32),
-    Paciente(nombre: "María López", edad: 28),
-    Paciente(nombre: "Carlos Rodríguez", edad: 50),
-    Paciente(nombre: "Laura Sánchez", edad: 42),
-    Paciente(nombre: "Pedro Martínez", edad: 35),
-    Paciente(nombre: "Luisa Fernández", edad: 27),
-    Paciente(nombre: "Miguel González", edad: 38),
-    Paciente(nombre: "Isabel Torres", edad: 29),
-    Paciente(nombre: "Roberto Ramírez", edad: 48),
-    Paciente(nombre: "Carmen Ruiz", edad: 33),
-    Paciente(nombre: "Javier Vargas", edad: 31),
-    Paciente(nombre: "Elena Jiménez", edad: 40),
-    Paciente(nombre: "Guillermo Silva", edad: 26),
-    Paciente(nombre: "Sofía Ortiz", edad: 34),
-    Paciente(nombre: "Alejandro Herrera", edad: 44),
-    Paciente(nombre: "Natalia Castro", edad: 37),
-    Paciente(nombre: "Andrés Morales", edad: 39),
-    // Agrega más pacientes según tus necesidades
-  ];
+Future<List<Paciente>> getListaPacientes(List<String> pacientesIDs) async {
+  const String url = "http://localhost:3000/usuario/getPacientesData";
+
+  final Map<String, dynamic> requestBody = {
+    "pacientesIds": pacientesIDs,
+  };
+
+  final String jsonBody = jsonEncode(requestBody);
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {"Content-Type": "application/json"},
+      body: jsonBody,
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      List<Paciente> pacientes =
+          jsonResponse.map((data) => Paciente.fromJson(data)).toList();
+
+      return pacientes;
+    } else {
+      throw Exception('Error al obtener la lista de pacientes');
+    }
+  } catch (e) {
+    throw Exception('Error de conexión: $e');
+  }
+}
+
+class Paciente {
+  final String id;
+  final String nombre;
+  final String rut;
+
+  Paciente({required this.id, required this.nombre, required this.rut});
+
+  factory Paciente.fromJson(Map<String, dynamic> json) {
+    return Paciente(
+      id: json['_id'],
+      nombre: json['nombre'],
+      rut: json['rut'],
+    );
+  }
 }

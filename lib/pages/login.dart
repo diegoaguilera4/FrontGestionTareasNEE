@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:gestiontareas/pages/profesional.dart';
+import 'package:gestiontareas/pages/registro.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../responsive.dart';
@@ -47,10 +48,22 @@ class _LoginViewState extends State<LoginView> {
 
       if (jsonResponse['rol'] == 'Profesional') {
         // ignore: use_build_context_synchronously
-         Navigator.pushNamed(context, '/profesional', arguments: myToken);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfesionalView(token: myToken),
+            settings: RouteSettings(name: '/profesional'),
+          ),
+        );
       } else {
         // ignore: use_build_context_synchronously
-        Navigator.pushNamed(context, '/tareas', arguments: myToken);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TaskView(token: myToken),
+            settings: RouteSettings(name: '/tareas'),
+          ),
+        );
       }
     } else {
       // ignore: use_build_context_synchronously
@@ -147,7 +160,13 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       const SizedBox(height: 10),
                       InkWell(
-                        onTap: () => Navigator.pushNamed(context, '/registro'),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegistroView(),
+                            settings: RouteSettings(name: '/registro'),
+                          ),
+                        ),
                         child: const Text(
                           '¿No tienes cuenta? Regístrate aquí',
                           style: TextStyle(

@@ -21,7 +21,14 @@ class _ProfesionalViewState extends State<ProfesionalView> {
   @override
   void initState() {
     super.initState();
+    _storeToken();
     _initializeEmail();
+  }
+
+  // Función para almacenar el token
+  Future<void> _storeToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', widget.token);
   }
 
   // Función para inicializar el campo 'email'
@@ -41,12 +48,14 @@ class _ProfesionalViewState extends State<ProfesionalView> {
   Future<void> _handleLogout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token'); // Elimina el token almacenado
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                LoginView())); // Navega a la pantalla de inicio de sesión
+    // Navega a la pantalla de inicio de sesión
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginView(),
+        settings: RouteSettings(name: '/'),
+      ),
+    );
   }
 
   @override
@@ -55,12 +64,6 @@ class _ProfesionalViewState extends State<ProfesionalView> {
       appBar: AppBar(
         title: const Text('Vista Profesional'),
         backgroundColor: secondaryColor,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: _handleLogout, // Llama a la función de cerrar sesión
-          ),
-        ],
       ),
       drawer: MenuProfesional(
         currentPage: 'general',

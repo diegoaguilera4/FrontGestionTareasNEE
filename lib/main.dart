@@ -6,9 +6,11 @@ import 'package:gestiontareas/pages/pacientes.dart';
 import 'package:gestiontareas/pages/profesional.dart';
 import 'package:gestiontareas/pages/registro.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'colores.dart';
 
 void main() {
+  setPathUrlStrategy();
   runApp(MyApp());
 }
 
@@ -29,7 +31,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/', // Página de inicio
       onGenerateRoute: (settings) {
         // Si pasas al constructor de la ruta argumentos, se encontrarán en settings.arguments.
-        // En este caso, extrae el token que pasaste con Navigator.pushNamed().
         final args = settings.arguments;
 
         switch (settings.name) {

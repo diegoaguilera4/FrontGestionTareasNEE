@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/login.dart';
 
 class MenuPaciente extends StatefulWidget {
   final String token;
 
-  MenuPaciente({Key? key, required this.token, required String currentPage}) : super(key: key);
+  MenuPaciente({Key? key, required this.token, required String currentPage})
+      : super(key: key);
 
   @override
   _MenuPacienteState createState() => _MenuPacienteState();
@@ -63,7 +65,13 @@ class _MenuPacienteState extends State<MenuPaciente> {
 
           // Realiza la navegación
           if (title == 'Mis tareas') {
-            Navigator.pushNamed(context, '/tareas', arguments: widget.token);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskView(token: widget.token),
+                settings: RouteSettings(name: '/tareas'),
+              ),
+            );
           } else if (title == 'Cerrar Sesión') {
             _handleLogout();
           }
@@ -75,7 +83,12 @@ class _MenuPacienteState extends State<MenuPaciente> {
   Future<void> _handleLogout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginView()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginView(),
+        settings: RouteSettings(name: '/'),
+      ),
+    );
   }
 }
