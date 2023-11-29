@@ -103,8 +103,13 @@ class _PacientesViewState extends State<PacientesView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  AgregarPacienteView(token: widget.token),
+                              builder: (context) => AgregarPacienteView(
+                                token: widget.token,
+                                onPacienteAdded: () {
+                                  // Esta función se ejecutará después de regresar desde AgregarPacienteView
+                                  _initializePacientes();
+                                },
+                              ),
                               settings: RouteSettings(name: '/agregarPaciente'),
                             ),
                           );
@@ -147,8 +152,13 @@ class _PacientesViewState extends State<PacientesView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                AgregarPacienteView(token: widget.token),
+                            builder: (context) => AgregarPacienteView(
+                              token: widget.token,
+                              onPacienteAdded: () {
+                                // Esta función se ejecutará después de regresar desde AgregarPacienteView
+                                _initializePacientes();
+                              },
+                            ),
                             settings: RouteSettings(name: '/agregarPaciente'),
                           ),
                         );

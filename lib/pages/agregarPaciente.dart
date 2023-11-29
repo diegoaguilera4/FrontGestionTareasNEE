@@ -2,13 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/pacientes.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AgregarPacienteView extends StatefulWidget {
   final String token;
-
-  AgregarPacienteView({Key? key, required this.token}) : super(key: key);
+  final VoidCallback onPacienteAdded;
+  AgregarPacienteView(
+      {Key? key, required this.token, required this.onPacienteAdded})
+      : super(key: key);
 
   @override
   _AgregarPacienteViewState createState() => _AgregarPacienteViewState();
@@ -63,6 +66,15 @@ class _AgregarPacienteViewState extends State<AgregarPacienteView> {
           if (response2.statusCode == 200) {
             // Éxito en ambas solicitudes
             print('Ambas solicitudes completadas con éxito');
+            widget.onPacienteAdded();
+            // ignore: use_build_context_synchronously
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PacientesView(token: widget.token),
+                settings: const RouteSettings(name: '/pacientes'),
+              ),
+            );
           } else {
             // Manejar error en la segunda solicitud
             print('Error en la segunda solicitud: ${response2.statusCode}');
@@ -161,8 +173,6 @@ class _AgregarPacienteViewState extends State<AgregarPacienteView> {
                               'rut': rutController.text,
                             };
                             _crearPaciente(nuevoPaciente);
-                            // Luego, puedes navegar de regreso a la vista de pacientes
-                            Navigator.pop(context);
                           }
                         },
                         style: ElevatedButton.styleFrom(

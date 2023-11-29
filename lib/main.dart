@@ -85,7 +85,10 @@ class MyApp extends StatelessWidget {
           case '/agregarPaciente':
             if (args is String) {
               return MaterialPageRoute(
-                builder: (context) => AgregarPacienteView(token: args),
+                builder: (context) => AgregarPacienteView(
+                  token: args,
+                  onPacienteAdded: () {},
+                ),
               );
             }
             break;
