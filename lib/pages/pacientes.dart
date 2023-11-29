@@ -27,18 +27,32 @@ class _PacientesViewState extends State<PacientesView> {
   void initState() {
     super.initState();
     _pacientesDataTableState = _PacientesDataTableState();
+    _pacientesFuture = _fetchPacientes(); // Inicializar _pacientesFuture aquí
     _initializePacientes();
   }
 
   void _initializePacientes() async {
     try {
       Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+      String profesionalId = jwtDecodedToken['usuarioId'];
 
-      List<dynamic>? pacientesDynamic = jwtDecodedToken['pacientes'];
-      if (pacientesDynamic != null) {
-        pacientesID =
-            pacientesDynamic.map((dynamic item) => item.toString()).toList();
-        _pacientesFuture = _fetchPacientes();
+      // Obtener usuario con profesionalId y obtener pacientes
+      var url = Uri.parse('http://localhost:3000/usuario/get/$profesionalId');
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic>? pacientesDynamic = jsonResponse['pacientes'];
+        if (pacientesDynamic != null) {
+          setState(() {
+            pacientesID = pacientesDynamic
+                .map((dynamic item) => item.toString())
+                .toList();
+            _pacientesFuture = _fetchPacientes();
+          });
+        }
+      } else {
+        throw Exception('Error al obtener la lista de pacientes');
       }
     } catch (e) {
       print('Error al decodificar el token: $e');
@@ -182,29 +196,30 @@ class _PacientesViewState extends State<PacientesView> {
           ),
           const SizedBox(height: 16.0),
           Expanded(
-            child: FutureBuilder(
-              future: _pacientesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  List<Paciente> pacientes = snapshot.data as List<Paciente>;
-                  return SingleChildScrollView(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: pacientes != null
-                          ? PacientesDataTable(
-                              pacientes: pacientes,
-                              state: _pacientesDataTableState)
-                          : Center(child: CircularProgressIndicator()),
+              child: FutureBuilder(
+            future: _pacientesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData ||
+                  (snapshot.data as List<Paciente>).isEmpty) {
+                return Center(child: Text('No se encontraron pacientes.'));
+              } else {
+                List<Paciente> pacientes = snapshot.data as List<Paciente>;
+                return SingleChildScrollView(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: PacientesDataTable(
+                      pacientes: pacientes,
+                      state: _pacientesDataTableState,
                     ),
-                  );
-                }
-              },
-            ),
-          ),
+                  ),
+                );
+              }
+            },
+          )),
         ],
       ),
     );
@@ -317,7 +332,7 @@ class PacientesDataSource extends DataTableSource {
 }
 
 Future<List<Paciente>> getListaPacientes(List<String> pacientesIDs) async {
-  const String url = "http://localhost:3000/usuario/getPacientesData";
+  const String url = "http://localhost:3000/paciente/getVarios";
 
   final Map<String, dynamic> requestBody = {
     "pacientesIds": pacientesIDs,
@@ -336,7 +351,6 @@ Future<List<Paciente>> getListaPacientes(List<String> pacientesIDs) async {
       List<dynamic> jsonResponse = json.decode(response.body);
       List<Paciente> pacientes =
           jsonResponse.map((data) => Paciente.fromJson(data)).toList();
-
       return pacientes;
     } else {
       throw Exception('Error al obtener la lista de pacientes');
