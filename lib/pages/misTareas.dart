@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/components/cartaTarea.dart';
@@ -37,6 +39,15 @@ class _TaskViewState extends State<TaskView> {
       viewportFraction: 0.8,
       initialPage: _currentIndex,
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Guardar la ruta actual en las preferencias compartidas
+    window.localStorage['currentRoute'] =
+        ModalRoute.of(context)!.settings.name!;
   }
 
   @override

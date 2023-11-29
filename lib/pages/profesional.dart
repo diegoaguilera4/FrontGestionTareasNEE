@@ -1,8 +1,9 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/login.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/menuProfesional.dart';
 
@@ -25,10 +26,17 @@ class _ProfesionalViewState extends State<ProfesionalView> {
     _initializeEmail();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    window.localStorage['currentRoute'] =
+        ModalRoute.of(context)!.settings.name!;
+  }
+
   // Función para almacenar el token
   Future<void> _storeToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', widget.token);
+    window.localStorage['token'] = widget.token;
   }
 
   // Función para inicializar el campo 'email'
@@ -46,8 +54,7 @@ class _ProfesionalViewState extends State<ProfesionalView> {
 
   // Función para cerrar sesión
   Future<void> _handleLogout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token'); // Elimina el token almacenado
+    window.localStorage.remove('token');
     // Navega a la pantalla de inicio de sesión
     Navigator.push(
       context,

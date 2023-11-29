@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:html';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/pages/agregarPaciente.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -21,7 +21,8 @@ class PacientesView extends StatefulWidget {
 class _PacientesViewState extends State<PacientesView> {
   late List<String>? pacientesID = [];
   late Future<List<Paciente>> _pacientesFuture;
-  late _PacientesDataTableState _pacientesDataTableState;
+  _PacientesDataTableState _pacientesDataTableState =
+      _PacientesDataTableState();
 
   @override
   void initState() {
@@ -29,6 +30,15 @@ class _PacientesViewState extends State<PacientesView> {
     _pacientesDataTableState = _PacientesDataTableState();
     _pacientesFuture = _fetchPacientes(); // Inicializar _pacientesFuture aquí
     _initializePacientes();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Guardar la ruta actual en las preferencias compartidas
+    window.localStorage['currentRoute'] =
+        ModalRoute.of(context)!.settings.name!;
   }
 
   void _initializePacientes() async {
@@ -255,9 +265,8 @@ class _PacientesDataTableState extends State<PacientesDataTable> {
   @override
   void initState() {
     super.initState();
-    pacientes = widget.pacientes;
-    // Inicializa filteredPacientes con la lista completa al inicio
-    filteredPacientes = widget.pacientes;
+    pacientes = List.from(widget.pacientes);
+    filteredPacientes = List.from(widget.pacientes);
   }
 
   void clearFilter() {
@@ -283,7 +292,7 @@ class _PacientesDataTableState extends State<PacientesDataTable> {
   @override
   Widget build(BuildContext context) {
     return PaginatedDataTable(
-      columns: const [
+      columns: [
         DataColumn(label: Text('Nombre')),
         DataColumn(label: Text('Rut')),
         DataColumn(label: Text('Opciones')),

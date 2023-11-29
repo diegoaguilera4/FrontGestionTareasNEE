@@ -1,7 +1,8 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/misTareas.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/login.dart';
 
 class MenuPaciente extends StatefulWidget {
@@ -81,8 +82,7 @@ class _MenuPacienteState extends State<MenuPaciente> {
   }
 
   Future<void> _handleLogout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
+    window.localStorage.remove('token');
     Navigator.push(
       context,
       MaterialPageRoute(

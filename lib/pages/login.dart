@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:gestiontareas/pages/profesional.dart';
 import 'package:gestiontareas/pages/registro.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../responsive.dart';
 
@@ -17,16 +17,10 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  late SharedPreferences prefs;
 
   @override
   void initState() {
     super.initState();
-    initSharedPref();
-  }
-
-  void initSharedPref() async {
-    prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> _login(BuildContext context) async {
@@ -45,8 +39,9 @@ class _LoginViewState extends State<LoginView> {
     if (jsonResponse['status']) {
       var myToken = jsonResponse['token'];
       var rol = jsonResponse['rol'];
-      prefs.setString('token', myToken);
-      prefs.setString('rol', rol);
+      window.localStorage['token'] = myToken;
+      window.localStorage['rol'] = rol;
+
       if (rol == 'Profesional') {
         // ignore: use_build_context_synchronously
         Navigator.push(

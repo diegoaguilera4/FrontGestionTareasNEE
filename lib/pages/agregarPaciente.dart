@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:html';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
@@ -8,7 +9,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AgregarPacienteView extends StatefulWidget {
   final String token;
-  final VoidCallback onPacienteAdded;
+  final ui.VoidCallback onPacienteAdded;
   AgregarPacienteView(
       {Key? key, required this.token, required this.onPacienteAdded})
       : super(key: key);
@@ -27,6 +28,15 @@ class _AgregarPacienteViewState extends State<AgregarPacienteView> {
   void initState() {
     super.initState();
     _initializeEmail();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Guardar la ruta actual en las preferencias compartidas
+    window.localStorage['currentRoute'] =
+        ModalRoute.of(context)!.settings.name!;
   }
 
   // Función para inicializar el campo 'email'

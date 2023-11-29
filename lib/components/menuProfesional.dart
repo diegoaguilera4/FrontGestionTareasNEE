@@ -1,7 +1,8 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/login.dart';
 import '../pages/profesional.dart';
@@ -96,8 +97,7 @@ class MenuProfesional extends StatelessWidget {
               ),
               onTap: () async {
                 // Agrega la lógica para cerrar la sesión
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('token'); // Elimina el token almacenado
+                window.localStorage.remove('token');
                 // Redirige a la página de inicio de sesión
                 Navigator.push(
                   context,
