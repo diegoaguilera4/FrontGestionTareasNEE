@@ -13,7 +13,7 @@ class MenuPaciente extends StatefulWidget {
 }
 
 class _MenuPacienteState extends State<MenuPaciente> {
-  String currentPage = 'Mis tareas'; // Inicializa con la página predeterminada
+  String currentPage = window.localStorage['currentRoute']!;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -34,18 +34,20 @@ class _MenuPacienteState extends State<MenuPaciente> {
               ],
             ),
           ),
-          _buildMenuItem('Mis tareas', Icons.dashboard),
+          _buildMenuItem('/tareas', 'Mis tareas', Icons.dashboard),
           // Agrega más elementos de menú según tus necesidades
           const Divider(), // Línea divisoria
-          _buildMenuItem('Cerrar Sesión', Icons.exit_to_app),
+          _buildMenuItem('', 'Cerrar Sesión', Icons.exit_to_app),
         ],
       ),
     );
   }
 
-  Widget _buildMenuItem(String title, IconData icon) {
+  Widget _buildMenuItem(String ruta, String title, IconData icon) {
+    bool isSelected = ruta == currentPage;
+
     return Container(
-      color: currentPage == title ? primaryColor : Colors.transparent,
+      color: isSelected ? primaryColor : Colors.transparent,
       child: ListTile(
         leading: Icon(icon, color: Colors.white),
         title: Text(
@@ -57,7 +59,7 @@ class _MenuPacienteState extends State<MenuPaciente> {
         onTap: () {
           // Actualiza currentPage antes de realizar la navegación
           setState(() {
-            currentPage = title;
+            currentPage = window.localStorage['currentRoute']!;
           });
 
           // Realiza la navegación

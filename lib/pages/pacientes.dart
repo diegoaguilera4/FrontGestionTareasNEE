@@ -93,7 +93,7 @@ class _PacientesViewState extends State<PacientesView> {
         title: const Text('Pacientes'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuProfesional(currentPage: 'pacientes'),
+      drawer: MenuProfesional(currentPage: ''),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -127,21 +127,6 @@ class _PacientesViewState extends State<PacientesView> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16.0),
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          // Agrega la lógica para "Nueva Sesión"
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor),
-                        icon: const Icon(Icons.add),
-                        label: const Text('Nueva Sesión'),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -172,23 +157,6 @@ class _PacientesViewState extends State<PacientesView> {
                           backgroundColor: primaryColor),
                       icon: const Icon(Icons.person_add),
                       label: const Text('Agregar Paciente'),
-                    ),
-                  ),
-                ),
-              const SizedBox(width: 16.0),
-              if (MediaQuery.of(context).size.width < 768 == false)
-                Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Agrega la lógica para "Nueva Sesión"
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Nueva Sesión'),
                     ),
                   ),
                 ),

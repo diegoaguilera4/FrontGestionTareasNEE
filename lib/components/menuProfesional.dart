@@ -2,14 +2,21 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
-
+import 'package:gestiontareas/pages/profesional.dart';
+import 'package:gestiontareas/pages/sesiones.dart';
 import '../pages/login.dart';
-import '../pages/profesional.dart';
 
-class MenuProfesional extends StatelessWidget {
-  String currentPage; // La página actual
-  MenuProfesional({super.key, required this.currentPage});
+class MenuProfesional extends StatefulWidget {
+  MenuProfesional({Key? key, required String currentPage}) : super(key: key);
+
+  @override
+  _MenuProfesionalState createState() => _MenuProfesionalState();
+}
+
+class _MenuProfesionalState extends State<MenuProfesional> {
+  String currentPage = window.localStorage['currentRoute']!;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,85 +37,77 @@ class MenuProfesional extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            color: currentPage == 'general' ? primaryColor : Colors.transparent,
-            child: ListTile(
-              leading: const Icon(Icons.dashboard, color: Colors.white),
-              title: const Text(
-                'General',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              onTap: () {
-                // Navega a la página de panel de control y actualiza currentPage
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfesionalView(),
-                    settings: RouteSettings(name: '/profesional'),
-                  ),
-                );
-                currentPage = 'general';
-              },
-            ),
-          ),
-          Container(
-            color:
-                currentPage == 'pacientes' ? primaryColor : Colors.transparent,
-            child: ListTile(
-              leading: const Icon(Icons.people, color: Colors.white),
-              title: const Text(
-                'Pacientes',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              onTap: () {
-                // Navega a la página de panel de control y actualiza currentPage
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PacientesView(),
-                    settings: RouteSettings(name: '/pacientes'),
-                  ),
-                );
-                currentPage = 'pacientes';
-              },
-            ),
-          ),
+          _buildMenuItem('/profesional', 'General', Icons.dashboard),
+          _buildMenuItem('/pacientes', 'Pacientes', Icons.people),
+          _buildMenuItem('/sesiones', 'Sesiones', Icons.dashboard),
 
           // Agrega más elementos de menú según tus necesidades
-
           const Divider(), // Línea divisoria
-
-          Container(
-            color: currentPage == 'cerrarSesion'
-                ? Colors.blue
-                : Colors.transparent,
-            child: ListTile(
-              leading: const Icon(Icons.exit_to_app, color: Colors.white),
-              title: const Text(
-                'Cerrar Sesión',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              onTap: () async {
-                // Agrega la lógica para cerrar la sesión
-                window.localStorage.remove('token');
-                // Redirige a la página de inicio de sesión
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginView(),
-                    settings: RouteSettings(name: '/'),
-                  ),
-                );
-              },
-            ),
-          ),
+          _buildMenuItem('', 'Cerrar Sesión', Icons.exit_to_app),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(String ruta, String title, IconData icon) {
+    bool isSelected = ruta == currentPage;
+
+    return Container(
+      color: isSelected ? primaryColor : Colors.transparent,
+      child: ListTile(
+        leading: Icon(icon, color: Colors.white),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        onTap: () {
+          // Actualiza currentPage antes de realizar la navegación
+          setState(() {
+            currentPage = window.localStorage['currentRoute']!;
+          });
+
+          // Realiza la navegación
+          if (title == 'General') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfesionalView(),
+                settings: RouteSettings(name: '/profesional'),
+              ),
+            );
+          } else if (title == 'Pacientes') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PacientesView(),
+                settings: RouteSettings(name: '/pacientes'),
+              ),
+            );
+          } else if (title == 'Sesiones') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SesionesView(),
+                settings: RouteSettings(name: '/sesiones'),
+              ),
+            );
+          } else if (title == 'Cerrar Sesión') {
+            _handleLogout();
+          }
+        },
+      ),
+    );
+  }
+
+  Future<void> _handleLogout() async {
+    window.localStorage.remove('token');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginView(),
+        settings: RouteSettings(name: '/'),
       ),
     );
   }
