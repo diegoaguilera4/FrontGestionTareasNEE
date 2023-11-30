@@ -2,11 +2,11 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
-import 'package:gestiontareas/pages/login.dart';
+import 'package:gestiontareas/pages/auth/login.dart';
 import 'package:gestiontareas/pages/page_404.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import '../components/menuProfesional.dart';
+import '../../components/menuProfesional.dart';
 
 class ProfesionalView extends StatefulWidget {
   const ProfesionalView({Key? key}) : super(key: key);

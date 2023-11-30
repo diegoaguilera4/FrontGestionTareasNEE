@@ -1,14 +1,14 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:gestiontareas/pages/agregarPaciente.dart';
-import 'package:gestiontareas/pages/login.dart';
-import 'package:gestiontareas/pages/misTareas.dart';
-import 'package:gestiontareas/pages/pacientes.dart';
+import 'package:gestiontareas/pages/profesional/agregarPaciente.dart';
+import 'package:gestiontareas/pages/auth/login.dart';
+import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
+import 'package:gestiontareas/pages/profesional/pacientes.dart';
 import 'package:gestiontareas/pages/page_404.dart';
-import 'package:gestiontareas/pages/profesional.dart';
-import 'package:gestiontareas/pages/registro.dart';
-import 'package:gestiontareas/pages/sesiones.dart';
+import 'package:gestiontareas/pages/profesional/profesional.dart';
+import 'package:gestiontareas/pages/auth/registro.dart';
+import 'package:gestiontareas/pages/profesional/sesiones.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:url_strategy/url_strategy.dart';

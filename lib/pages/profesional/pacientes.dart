@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:gestiontareas/pages/agregarPaciente.dart';
+import 'package:gestiontareas/pages/profesional/agregarPaciente.dart';
 import 'package:gestiontareas/pages/page_404.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 
-import '../colores.dart';
-import '../components/menuProfesional.dart';
+import '../../colores.dart';
+import '../../components/menuProfesional.dart';
 
 class PacientesView extends StatefulWidget {
   const PacientesView({
@@ -97,69 +97,35 @@ class _PacientesViewState extends State<PacientesView> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          if (MediaQuery.of(context).size.width < 768)
-            Padding(
-              padding: const EdgeInsets.only(left: 5.0, top: 16.0, right: 5.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AgregarPacienteView(
-                                onPacienteAdded: () {
-                                  // Esta función se ejecutará después de regresar desde AgregarPacienteView
-                                  _refreshPacientes();
-                                },
-                              ),
-                              settings: RouteSettings(name: '/agregarPaciente'),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor),
-                        icon: const Icon(Icons.person_add),
-                        label: const Text('Agregar Paciente'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          const SizedBox(height: 16.0), // Espaciado entre las filas
+          // Espaciado entre las filas
           Row(
             children: [
-              if (MediaQuery.of(context).size.width < 768 == false)
-                Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AgregarPacienteView(
-                              onPacienteAdded: () {
-                                // Esta función se ejecutará después de regresar desde AgregarPacienteView
-                                _refreshPacientes();
-                              },
-                            ),
-                            settings: RouteSettings(name: '/agregarPaciente'),
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0, top: 10.0),
+                child: SizedBox(
+                  height: 50,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AgregarPacienteView(
+                            onPacienteAdded: () {
+                              // Esta función se ejecutará después de regresar desde AgregarPacienteView
+                              _refreshPacientes();
+                            },
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor),
-                      icon: const Icon(Icons.person_add),
-                      label: const Text('Agregar Paciente'),
-                    ),
+                          settings: RouteSettings(name: '/agregarPaciente'),
+                        ),
+                      );
+                    },
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                    icon: const Icon(Icons.person_add),
+                    label: const Text('Agregar Paciente'),
                   ),
                 ),
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),

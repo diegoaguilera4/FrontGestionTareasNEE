@@ -3,11 +3,11 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
-import 'package:gestiontareas/pages/misTareas.dart';
-import 'package:gestiontareas/pages/profesional.dart';
-import 'package:gestiontareas/pages/registro.dart';
+import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
+import 'package:gestiontareas/pages/profesional/profesional.dart';
+import 'package:gestiontareas/pages/auth/registro.dart';
 import 'package:http/http.dart' as http;
-import '../responsive.dart';
+import '../../responsive.dart';
 
 class LoginView extends StatefulWidget {
   @override

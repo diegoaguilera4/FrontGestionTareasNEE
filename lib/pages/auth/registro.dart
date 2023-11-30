@@ -5,7 +5,7 @@ import 'package:gestiontareas/colores.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
-import '../responsive.dart';
+import '../../responsive.dart';
 import 'login.dart';
 
 class RegistroView extends StatelessWidget {

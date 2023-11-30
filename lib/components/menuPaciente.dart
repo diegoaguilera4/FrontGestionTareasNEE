@@ -2,8 +2,8 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
-import 'package:gestiontareas/pages/misTareas.dart';
-import '../pages/login.dart';
+import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
+import '../pages/auth/login.dart';
 
 class MenuPaciente extends StatefulWidget {
   MenuPaciente({Key? key, required String currentPage}) : super(key: key);

@@ -2,11 +2,11 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
-import 'package:gestiontareas/pages/misTareas.dart';
-import 'package:gestiontareas/pages/pacientes.dart';
-import 'package:gestiontareas/pages/profesional.dart';
-import 'package:gestiontareas/pages/sesiones.dart';
-import '../pages/login.dart';
+import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
+import 'package:gestiontareas/pages/profesional/pacientes.dart';
+import 'package:gestiontareas/pages/profesional/profesional.dart';
+import 'package:gestiontareas/pages/profesional/sesiones.dart';
+import '../pages/auth/login.dart';
 
 class MenuProfesional extends StatefulWidget {
   MenuProfesional({Key? key, required String currentPage}) : super(key: key);
