@@ -7,9 +7,8 @@ import 'package:gestiontareas/components/menuPaciente.dart';
 import 'package:gestiontareas/responsive.dart';
 
 class TaskView extends StatefulWidget {
-  final String token;
 
-  const TaskView({super.key, required this.token});
+  const TaskView({super.key});
   @override
   _TaskViewState createState() => _TaskViewState();
 }
@@ -57,7 +56,7 @@ class _TaskViewState extends State<TaskView> {
         title: const Text('Tareas asignadas'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuPaciente(currentPage: '', token: widget.token),
+      drawer: MenuPaciente(currentPage: ''),
       body: _buildBody(),
     );
   }

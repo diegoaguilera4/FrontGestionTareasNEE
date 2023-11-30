@@ -6,10 +6,7 @@ import 'package:gestiontareas/pages/misTareas.dart';
 import '../pages/login.dart';
 
 class MenuPaciente extends StatefulWidget {
-  final String token;
-
-  MenuPaciente({Key? key, required this.token, required String currentPage})
-      : super(key: key);
+  MenuPaciente({Key? key, required String currentPage}) : super(key: key);
 
   @override
   _MenuPacienteState createState() => _MenuPacienteState();
@@ -17,7 +14,6 @@ class MenuPaciente extends StatefulWidget {
 
 class _MenuPacienteState extends State<MenuPaciente> {
   String currentPage = 'Mis tareas'; // Inicializa con la página predeterminada
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -69,7 +65,7 @@ class _MenuPacienteState extends State<MenuPaciente> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskView(token: widget.token),
+                builder: (context) => TaskView(),
                 settings: RouteSettings(name: '/tareas'),
               ),
             );

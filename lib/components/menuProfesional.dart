@@ -9,8 +9,7 @@ import '../pages/profesional.dart';
 
 class MenuProfesional extends StatelessWidget {
   String currentPage; // La página actual
-  final String token;
-  MenuProfesional({super.key, required this.currentPage, required this.token});
+  MenuProfesional({super.key, required this.currentPage});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -46,7 +45,7 @@ class MenuProfesional extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfesionalView(token: token),
+                    builder: (context) => ProfesionalView(),
                     settings: RouteSettings(name: '/profesional'),
                   ),
                 );
@@ -70,7 +69,7 @@ class MenuProfesional extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PacientesView(token: token),
+                    builder: (context) => PacientesView(),
                     settings: RouteSettings(name: '/pacientes'),
                   ),
                 );

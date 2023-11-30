@@ -10,9 +10,9 @@ import '../colores.dart';
 import '../components/menuProfesional.dart';
 
 class PacientesView extends StatefulWidget {
-  final String token;
-
-  const PacientesView({Key? key, required this.token}) : super(key: key);
+  const PacientesView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _PacientesViewState createState() => _PacientesViewState();
@@ -41,7 +41,9 @@ class _PacientesViewState extends State<PacientesView> {
 
   Future<List<Paciente>> _fetchPacientes() async {
     try {
-      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+      String myToken;
+      myToken = window.localStorage['token']!;
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(myToken);
       String profesionalId = jwtDecodedToken['usuarioId'];
 
       // Obtener lista de pacientes directamente desde /getMisPacientes
@@ -84,7 +86,7 @@ class _PacientesViewState extends State<PacientesView> {
         title: const Text('Pacientes'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuProfesional(currentPage: 'pacientes', token: widget.token),
+      drawer: MenuProfesional(currentPage: 'pacientes'),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -102,7 +104,6 @@ class _PacientesViewState extends State<PacientesView> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => AgregarPacienteView(
-                                token: widget.token,
                                 onPacienteAdded: () {
                                   // Esta función se ejecutará después de regresar desde AgregarPacienteView
                                   _refreshPacientes();
@@ -151,7 +152,6 @@ class _PacientesViewState extends State<PacientesView> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => AgregarPacienteView(
-                              token: widget.token,
                               onPacienteAdded: () {
                                 // Esta función se ejecutará después de regresar desde AgregarPacienteView
                                 _refreshPacientes();

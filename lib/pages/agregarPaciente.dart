@@ -8,10 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AgregarPacienteView extends StatefulWidget {
-  final String token;
   final ui.VoidCallback onPacienteAdded;
-  AgregarPacienteView(
-      {Key? key, required this.token, required this.onPacienteAdded})
+  AgregarPacienteView({Key? key, required this.onPacienteAdded})
       : super(key: key);
 
   @override
@@ -42,7 +40,8 @@ class _AgregarPacienteViewState extends State<AgregarPacienteView> {
   // Función para inicializar el campo 'email'
   void _initializeEmail() {
     try {
-      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+      Map<String, dynamic> jwtDecodedToken =
+          JwtDecoder.decode(window.localStorage['token']!);
       idProfesional = jwtDecodedToken['usuarioId'];
     } catch (e) {
       // Manejar cualquier error al decodificar el token, por ejemplo, token no válido.
@@ -81,7 +80,7 @@ class _AgregarPacienteViewState extends State<AgregarPacienteView> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PacientesView(token: widget.token),
+                builder: (context) => PacientesView(),
                 settings: const RouteSettings(name: '/pacientes'),
               ),
             );

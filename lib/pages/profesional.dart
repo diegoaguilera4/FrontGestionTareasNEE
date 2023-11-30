@@ -8,9 +8,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import '../components/menuProfesional.dart';
 
 class ProfesionalView extends StatefulWidget {
-  final String token;
 
-  const ProfesionalView({Key? key, required this.token}) : super(key: key);
+  const ProfesionalView({Key? key}) : super(key: key);
 
   @override
   State<ProfesionalView> createState() => _ProfesionalViewState();
@@ -22,7 +21,6 @@ class _ProfesionalViewState extends State<ProfesionalView> {
   @override
   void initState() {
     super.initState();
-    _storeToken();
     _initializeEmail();
   }
 
@@ -34,15 +32,11 @@ class _ProfesionalViewState extends State<ProfesionalView> {
         ModalRoute.of(context)!.settings.name!;
   }
 
-  // Función para almacenar el token
-  Future<void> _storeToken() async {
-    window.localStorage['token'] = widget.token;
-  }
 
   // Función para inicializar el campo 'email'
   void _initializeEmail() {
     try {
-      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(window.localStorage['token']!);
       email = jwtDecodedToken['email'];
     } catch (e) {
       // Manejar cualquier error al decodificar el token, por ejemplo, token no válido.
@@ -74,7 +68,6 @@ class _ProfesionalViewState extends State<ProfesionalView> {
       ),
       drawer: MenuProfesional(
         currentPage: 'general',
-        token: widget.token,
       ),
       body: Center(
         child: Text(email ?? 'Correo no disponible'),

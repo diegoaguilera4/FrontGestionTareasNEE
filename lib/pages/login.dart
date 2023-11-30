@@ -47,7 +47,7 @@ class _LoginViewState extends State<LoginView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfesionalView(token: myToken),
+            builder: (context) => ProfesionalView(),
             settings: RouteSettings(name: '/profesional'),
           ),
         );
@@ -56,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TaskView(token: myToken),
+            builder: (context) => TaskView(),
             settings: RouteSettings(name: '/tareas'),
           ),
         );

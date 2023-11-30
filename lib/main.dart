@@ -7,6 +7,7 @@ import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
 import 'package:gestiontareas/pages/profesional.dart';
 import 'package:gestiontareas/pages/registro.dart';
+import 'package:gestiontareas/pages/sesiones.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -20,6 +21,17 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final _routes = {
+    '/': (context) => LoginView(),
+    '/registro': (context) => RegistroView(),
+    '/profesional': (context) => ProfesionalView(),
+    '/pacientes': (context) => PacientesView(),
+    '/sesiones': (context) => const SesionesView(),
+    '/agregarPaciente': (context) =>
+        AgregarPacienteView(onPacienteAdded: () {}),
+    '/tareas': (context) => TaskView(),
+  };
+
   @override
   Widget build(BuildContext context) {
     String? token = window.localStorage['token'];
@@ -37,63 +49,26 @@ class MyApp extends StatelessWidget {
         ),
         canvasColor: secondaryColor,
       ),
-      home: isTokenValid ? _getInitialRoute(lastRoute, token) : LoginView(),
+      routes: _routes,
       onGenerateRoute: (settings) {
-        final args = settings.arguments;
         window.localStorage['currentRoute'] = settings.name!;
-        switch (settings.name) {
-          case '/':
-            return MaterialPageRoute(builder: (context) => LoginView());
-          case '/registro':
-            return MaterialPageRoute(builder: (context) => RegistroView());
-          case '/profesional':
-            if (args is String) {
-              return MaterialPageRoute(
-                builder: (context) => ProfesionalView(token: args),
-              );
-            }
-            break;
-          case '/pacientes':
-            if (args is String) {
-              return MaterialPageRoute(
-                builder: (context) => PacientesView(token: args),
-              );
-            }
-            break;
-          case '/agregarPaciente':
-            if (args is String) {
-              return MaterialPageRoute(
-                builder: (context) => AgregarPacienteView(
-                  token: args,
-                  onPacienteAdded: () {},
-                ),
-              );
-            }
-            break;
-          case '/tareas':
-            if (args is String) {
-              return MaterialPageRoute(
-                builder: (context) => TaskView(token: args),
-              );
-            }
-            break;
-          default:
-            return MaterialPageRoute(builder: (context) => ErrorView());
-        }
+        return MaterialPageRoute(
+          builder: (context) => ErrorView(),
+        );
       },
     );
   }
 
-  Widget _getInitialRoute(String? routeName, String? token) {
+  Widget _getInitialRoute(String? routeName) {
     switch (routeName) {
       case '/profesional':
-        return ProfesionalView(token: token!);
+        return ProfesionalView();
       case '/pacientes':
-        return PacientesView(token: token!);
+        return PacientesView();
       case '/agregarPaciente':
-        return AgregarPacienteView(token: token!, onPacienteAdded: () {});
+        return AgregarPacienteView(onPacienteAdded: () {});
       case '/tareas':
-        return TaskView(token: token!);
+        return TaskView();
       default:
         return LoginView();
     }
@@ -101,11 +76,13 @@ class MyApp extends StatelessWidget {
 }
 
 class ErrorView extends StatelessWidget {
+  const ErrorView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Error')),
-      body: Center(
+      appBar: AppBar(title: const Text('Error')),
+      body: const Center(
         child: Text('Ruta no encontrada'),
       ),
     );
