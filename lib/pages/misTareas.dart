@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/components/cartaTarea.dart';
 import 'package:gestiontareas/components/menuPaciente.dart';
+import 'package:gestiontareas/pages/page_404.dart';
 import 'package:gestiontareas/responsive.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class TaskView extends StatefulWidget {
-
   const TaskView({super.key});
   @override
   _TaskViewState createState() => _TaskViewState();
@@ -51,6 +52,13 @@ class _TaskViewState extends State<TaskView> {
 
   @override
   Widget build(BuildContext context) {
+    String token = window.localStorage['token']!;
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+    String? rol = jwtDecodedToken['rol'];
+    if (rol == "Profesional") {
+      return const Page404();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tareas asignadas'),

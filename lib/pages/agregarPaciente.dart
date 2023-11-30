@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
+import 'package:gestiontareas/pages/page_404.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -101,6 +102,12 @@ class _AgregarPacienteViewState extends State<AgregarPacienteView> {
 
   @override
   Widget build(BuildContext context) {
+    String token = window.localStorage['token']!;
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+    String? rol = jwtDecodedToken['rol'];
+    if (rol != "Profesional") {
+      return const Page404();
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agregar paciente'),

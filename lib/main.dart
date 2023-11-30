@@ -5,6 +5,7 @@ import 'package:gestiontareas/pages/agregarPaciente.dart';
 import 'package:gestiontareas/pages/login.dart';
 import 'package:gestiontareas/pages/misTareas.dart';
 import 'package:gestiontareas/pages/pacientes.dart';
+import 'package:gestiontareas/pages/page_404.dart';
 import 'package:gestiontareas/pages/profesional.dart';
 import 'package:gestiontareas/pages/registro.dart';
 import 'package:gestiontareas/pages/sesiones.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         window.localStorage['currentRoute'] = settings.name!;
         return MaterialPageRoute(
-          builder: (context) => ErrorView(),
+          builder: (context) => const Page404(),
         );
       },
     );
@@ -72,19 +73,5 @@ class MyApp extends StatelessWidget {
       default:
         return LoginView();
     }
-  }
-}
-
-class ErrorView extends StatelessWidget {
-  const ErrorView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Error')),
-      body: const Center(
-        child: Text('Ruta no encontrada'),
-      ),
-    );
   }
 }

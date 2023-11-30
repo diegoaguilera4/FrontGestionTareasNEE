@@ -3,12 +3,12 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/login.dart';
+import 'package:gestiontareas/pages/page_404.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../components/menuProfesional.dart';
 
 class ProfesionalView extends StatefulWidget {
-
   const ProfesionalView({Key? key}) : super(key: key);
 
   @override
@@ -32,11 +32,12 @@ class _ProfesionalViewState extends State<ProfesionalView> {
         ModalRoute.of(context)!.settings.name!;
   }
 
-
   // Función para inicializar el campo 'email'
   void _initializeEmail() {
     try {
-      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(window.localStorage['token']!);
+      Map<String, dynamic> jwtDecodedToken =
+          JwtDecoder.decode(window.localStorage['token']!);
+      // Verificar si el rol es 'Profesional' antes de mostrar la vista
       email = jwtDecodedToken['email'];
     } catch (e) {
       // Manejar cualquier error al decodificar el token, por ejemplo, token no válido.
@@ -61,6 +62,13 @@ class _ProfesionalViewState extends State<ProfesionalView> {
 
   @override
   Widget build(BuildContext context) {
+    String token = window.localStorage['token']!;
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+    String? rol = jwtDecodedToken['rol'];
+    if (rol != "Profesional") {
+      return const Page404();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vista Profesional'),
