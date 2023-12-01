@@ -1,8 +1,10 @@
 import 'dart:html';
+import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/pages/profesional/agregarPaciente.dart';
 import 'package:gestiontareas/pages/auth/login.dart';
+import 'package:gestiontareas/pages/profesional/agregarTarea.dart';
 import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
 import 'package:gestiontareas/pages/profesional/pacientes.dart';
 import 'package:gestiontareas/pages/page_404.dart';
@@ -31,14 +33,14 @@ class MyApp extends StatelessWidget {
     '/agregarPaciente': (context) =>
         AgregarPacienteView(onPacienteAdded: () {}),
     '/tareas': (context) => TaskView(),
+    '/agregarTarea': (context) => const AgregarTareaView(),
   };
 
   @override
   Widget build(BuildContext context) {
     String? token = window.localStorage['token'];
-    String? lastRoute = window.localStorage['currentRoute'];
     bool isTokenValid = token != null && JwtDecoder.isExpired(token!) == false;
-
+    // Verificar si el token es válido
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -58,20 +60,5 @@ class MyApp extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget _getInitialRoute(String? routeName) {
-    switch (routeName) {
-      case '/profesional':
-        return ProfesionalView();
-      case '/pacientes':
-        return PacientesView();
-      case '/agregarPaciente':
-        return AgregarPacienteView(onPacienteAdded: () {});
-      case '/tareas':
-        return TaskView();
-      default:
-        return LoginView();
-    }
   }
 }

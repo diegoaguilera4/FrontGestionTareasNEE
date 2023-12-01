@@ -48,6 +48,21 @@ class _SesionesViewState extends State<SesionesView> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0, top: 10.0),
+                child: SizedBox(
+                  height: 50,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/agregarTarea');
+                    },
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                    icon: const Icon(Icons.add_task),
+                    label: const Text('Agregar tarea'),
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16.0),
