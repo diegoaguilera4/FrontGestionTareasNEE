@@ -21,20 +21,21 @@ class RegistroView extends StatelessWidget {
 
     // Verificar condiciones del nombre
     if (nombre.isEmpty) {
-      _mostrarError(context, 'Ingrese un nombre válido.');
+      _mostrarMensaje(context, 'Ingrese un nombre válido.');
       return;
     }
 
     // Verificar formato de email
     if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
         .hasMatch(email)) {
-      _mostrarError(context, 'Ingrese un correo electrónico válido.');
+      _mostrarMensaje(context, 'Ingrese un correo electrónico válido.');
       return;
     }
 
     // Verificar longitud de la contraseña
     if (password.length < 8) {
-      _mostrarError(context, 'La contraseña debe tener al menos 8 caracteres.');
+      _mostrarMensaje(
+          context, 'La contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
@@ -45,18 +46,27 @@ class RegistroView extends StatelessWidget {
       'rol': selectedRole,
     };
 
-    await _enviarRegistroAlServidor(userData);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LoginView(),
-        settings: RouteSettings(name: '/'),
-      ),
-    );
+    await _enviarRegistroAlServidor(userData, context);
   }
 
-  Future<void> _enviarRegistroAlServidor(Map<String, String> userData) async {
+  Future<void> _enviarRegistroAlServidor(
+      Map<String, String> userData, BuildContext context) async {
+    //verificar que el usuario con ese email no exista
+    var url = Uri.parse(
+        'http://localhost:3000/usuario/getByEmail/${userData['email']}');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      // El usuario ya existe, mostrar un mensaje y salir de la función
+      // Puedes acceder a la propiedad "encontrado" del objeto JSON
+      var data = json.decode(response.body);
+      if (data['encontrado']) {
+        _mostrarMensaje(context, 'Ya existe un usuario con ese correo.');
+        return;
+      }
+    }
+
+    // Si el usuario no existe, continuar con el registro
     if (nombreController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
@@ -64,10 +74,15 @@ class RegistroView extends StatelessWidget {
       var response = await http.post(url,
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(userData));
+
+      if (response.statusCode == 201) {
+        Navigator.pushNamed(context, '/');
+        _mostrarMensaje(context, 'Usuario registrado con éxito.');
+      }
     }
   }
 
-  void _mostrarError(BuildContext context, String mensaje) {
+  void _mostrarMensaje(BuildContext context, String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(mensaje),
