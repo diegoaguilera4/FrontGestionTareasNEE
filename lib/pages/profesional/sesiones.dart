@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../../colores.dart';
 import '../../components/menuProfesional.dart';
@@ -13,6 +14,12 @@ class SesionesView extends StatefulWidget {
 }
 
 class _SesionesViewState extends State<SesionesView> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

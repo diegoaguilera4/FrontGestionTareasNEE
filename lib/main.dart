@@ -41,32 +41,18 @@ class MyApp extends StatelessWidget {
     String? token = window.localStorage['token'];
     bool isTokenValid = token != null && JwtDecoder.isExpired(token!) == false;
     // Verificar si el token es válido, sino enviar al login
-    if (!isTokenValid) {
-      return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          scaffoldBackgroundColor: bgColor,
-          textTheme:
-              GoogleFonts.montserratTextTheme(Theme.of(context).textTheme)
-                  .apply(
-            bodyColor: secondaryColor,
-            displayColor: secondaryColor,
-          ),
-          canvasColor: secondaryColor,
-        ),
-        routes: {
-          '/': (context) => LoginView(),
-          '/registro': (context) => RegistroView(),
-        },
-        onGenerateRoute: (settings) {
-          window.localStorage['currentRoute'] = settings.name!;
-          return MaterialPageRoute(
-            builder: (context) => const Page404(),
-          );
-        },
-      );
+    String rutaInicial = "";
+    if (isTokenValid) {
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token!);
+      String rol = jwtDecodedToken['rol'];
+      if (rol == 'Profesional') {
+        rutaInicial = '/profesional';
+      } else {
+        rutaInicial = '/tareas';
+      }
+    } else {
+      rutaInicial = '/';
     }
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -78,6 +64,7 @@ class MyApp extends StatelessWidget {
         ),
         canvasColor: secondaryColor,
       ),
+      initialRoute: rutaInicial,
       routes: _routes,
       onGenerateRoute: (settings) {
         window.localStorage['currentRoute'] = settings.name!;

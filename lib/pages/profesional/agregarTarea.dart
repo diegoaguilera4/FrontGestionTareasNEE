@@ -15,6 +15,7 @@ class AgregarTareaView extends StatefulWidget {
 }
 
 class _AgregarTareaViewState extends State<AgregarTareaView> {
+  String? rol;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nombreController = TextEditingController();
   String? asignacion;
@@ -26,6 +27,26 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initializeRol();
+  }
+
+  void _initializeRol() {
+    try {
+      Map<String, dynamic> jwtDecodedToken =
+          JwtDecoder.decode(window.localStorage['token']!);
+      // Verificar si el rol es 'Profesional' antes de mostrar la vista
+      rol = jwtDecodedToken['rol'];
+    } catch (e) {
+      // Manejar cualquier error al decodificar el token, por ejemplo, token no válido.
+      print('Error al decodificar el token: $e');
+      // Puedes manejar el error de otra manera, como cerrar sesión y volver a la pantalla de inicio.
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     window.localStorage['currentRoute'] =
@@ -34,13 +55,9 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
 
   @override
   Widget build(BuildContext context) {
-    String token = window.localStorage['token']!;
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
-    String? rol = jwtDecodedToken['rol'];
     if (rol != "Profesional") {
       return const Page404();
     }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agregar tarea'),

@@ -74,8 +74,7 @@ class _ProfesionalViewState extends State<ProfesionalView> {
         title: const Text('Vista Profesional'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuProfesional(currentPage: ''
-      ),
+      drawer: MenuProfesional(currentPage: ''),
       body: Center(
         child: Text(email ?? 'Correo no disponible'),
       ),

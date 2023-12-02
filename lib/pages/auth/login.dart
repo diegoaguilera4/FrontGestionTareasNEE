@@ -29,37 +29,39 @@ class _LoginViewState extends State<LoginView> {
       'contrasenia': passwordController.text,
     };
 
-    var response = await http.post(
-      Uri.parse('http://localhost:3000/usuario/login'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(reqBody),
-    );
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      var response = await http.post(
+        Uri.parse('http://localhost:3000/usuario/login'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(reqBody),
+      );
 
-    var jsonResponse = jsonDecode(response.body);
-    if (jsonResponse['status']) {
-      var myToken = jsonResponse['token'];
-      var rol = jsonResponse['rol'];
-      window.localStorage['token'] = myToken;
-      window.localStorage['rol'] = rol;
+      var jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['status']) {
+        var myToken = jsonResponse['token'];
+        var rol = jsonResponse['rol'];
+        window.localStorage['token'] = myToken;
+        window.localStorage['rol'] = rol;
 
-      if (rol == 'Profesional') {
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProfesionalView(),
-            settings: RouteSettings(name: '/profesional'),
-          ),
-        );
-      } else {
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TaskView(),
-            settings: RouteSettings(name: '/tareas'),
-          ),
-        );
+        if (rol == 'Profesional') {
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfesionalView(),
+              settings: RouteSettings(name: '/profesional'),
+            ),
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TaskView(),
+              settings: RouteSettings(name: '/tareas'),
+            ),
+          );
+        }
       }
     } else {
       // ignore: use_build_context_synchronously
