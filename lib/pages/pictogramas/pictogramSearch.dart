@@ -52,10 +52,13 @@ class _PictogramSearchViewState extends State<PictogramSearchView> {
                   icon: const Icon(Icons.search),
                   onPressed: () async {
                     try {
-                      final results = await searchPictograms(_controller.text);
-                      setState(() {
-                        _results = results;
-                      });
+                      if (_controller.text.isNotEmpty) {
+                        final results =
+                            await searchPictograms(_controller.text);
+                        setState(() {
+                          _results = results;
+                        });
+                      }
                     } catch (e) {
                       // Manejar la excepción aquí, por ejemplo, puedes imprimir un mensaje o no hacer nada.
                       print('Error during pictogram search: $e');

@@ -24,7 +24,7 @@ Future<List<PictogramResult>> searchPictograms(String searchTerm) async {
       Uri.parse('https://api.arasaac.org/v1/pictograms/es/search/$searchTerm');
 
   final Response response = await get(url);
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 ) {
     final List<dynamic> dataList = jsonDecode(response.body);
 
     // Convertir la lista de datos en una lista de objetos PictogramResult
