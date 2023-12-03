@@ -93,7 +93,7 @@ class _PacientesViewState extends State<PacientesView> {
         title: const Text('Pacientes'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuProfesional(currentPage: ''),
+      drawer: MenuProfesional(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[

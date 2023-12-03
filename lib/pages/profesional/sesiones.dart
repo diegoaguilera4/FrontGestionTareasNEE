@@ -35,7 +35,7 @@ class _SesionesViewState extends State<SesionesView> {
         title: const Text('Vista Profesional'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuProfesional(currentPage: ''),
+      drawer: MenuProfesional(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[

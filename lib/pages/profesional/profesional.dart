@@ -73,8 +73,9 @@ class _ProfesionalViewState extends State<ProfesionalView> {
       appBar: AppBar(
         title: const Text('Vista Profesional'),
         backgroundColor: secondaryColor,
+        //agregar boton para ir a pictogramas
       ),
-      drawer: MenuProfesional(currentPage: ''),
+      drawer: MenuProfesional(),
       body: Center(
         child: Text(email ?? 'Correo no disponible'),
       ),

@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/pictogramas/PictogramSearch.dart';
 import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
 import 'package:gestiontareas/pages/profesional/pacientes.dart';
 import 'package:gestiontareas/pages/profesional/profesional.dart';
@@ -9,7 +10,7 @@ import 'package:gestiontareas/pages/profesional/sesiones.dart';
 import '../pages/auth/login.dart';
 
 class MenuProfesional extends StatefulWidget {
-  MenuProfesional({Key? key, required String currentPage}) : super(key: key);
+  MenuProfesional({Key? key}) : super(key: key);
 
   @override
   _MenuProfesionalState createState() => _MenuProfesionalState();
@@ -39,7 +40,8 @@ class _MenuProfesionalState extends State<MenuProfesional> {
           ),
           _buildMenuItem('/profesional', 'General', Icons.dashboard),
           _buildMenuItem('/pacientes', 'Pacientes', Icons.people),
-          _buildMenuItem('/sesiones', 'Sesiones', Icons.dashboard),
+          _buildMenuItem('/sesiones', 'Sesiones', Icons.record_voice_over),
+          _buildMenuItem('/pictogramas', 'Pictogramas', Icons.image_search),
 
           // Agrega más elementos de menú según tus necesidades
           const Divider(), // Línea divisoria
@@ -70,29 +72,13 @@ class _MenuProfesionalState extends State<MenuProfesional> {
 
           // Realiza la navegación
           if (title == 'General') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfesionalView(),
-                settings: RouteSettings(name: '/profesional'),
-              ),
-            );
+            Navigator.pushNamed(context, '/profesional');
           } else if (title == 'Pacientes') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PacientesView(),
-                settings: RouteSettings(name: '/pacientes'),
-              ),
-            );
+            Navigator.pushNamed(context, '/pacientes');
           } else if (title == 'Sesiones') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SesionesView(),
-                settings: RouteSettings(name: '/sesiones'),
-              ),
-            );
+            Navigator.pushNamed(context, '/sesiones');
+          } else if (title == 'Pictogramas') {
+            Navigator.pushNamed(context, '/pictogramas');
           } else if (title == 'Cerrar Sesión') {
             _handleLogout();
           }
