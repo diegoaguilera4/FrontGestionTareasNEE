@@ -16,12 +16,9 @@ class ProfesionalView extends StatefulWidget {
 }
 
 class _ProfesionalViewState extends State<ProfesionalView> {
-  String? email;
-
   @override
   void initState() {
     super.initState();
-    _initializeEmail();
   }
 
   @override
@@ -30,21 +27,6 @@ class _ProfesionalViewState extends State<ProfesionalView> {
 
     window.localStorage['currentRoute'] =
         ModalRoute.of(context)!.settings.name!;
-  }
-
-  // Función para inicializar el campo 'email'
-  void _initializeEmail() {
-    try {
-      Map<String, dynamic> jwtDecodedToken =
-          JwtDecoder.decode(window.localStorage['token']!);
-      // Verificar si el rol es 'Profesional' antes de mostrar la vista
-      email = jwtDecodedToken['email'];
-    } catch (e) {
-      // Manejar cualquier error al decodificar el token, por ejemplo, token no válido.
-      print('Error al decodificar el token: $e');
-      // Puedes manejar el error de otra manera, como cerrar sesión y volver a la pantalla de inicio.
-      _handleLogout();
-    }
   }
 
   // Función para cerrar sesión
@@ -76,8 +58,8 @@ class _ProfesionalViewState extends State<ProfesionalView> {
         //agregar boton para ir a pictogramas
       ),
       drawer: MenuProfesional(),
-      body: Center(
-        child: Text(email ?? 'Correo no disponible'),
+      body: const Center(
+        child: Text('Dashboard'),
       ),
     );
   }
