@@ -24,7 +24,7 @@ Future<List<PictogramResult>> searchPictograms(String searchTerm) async {
       Uri.parse('https://api.arasaac.org/v1/pictograms/es/search/$searchTerm');
 
   final Response response = await get(url);
-  if (response.statusCode == 200 ) {
+  if (response.statusCode == 200) {
     final List<dynamic> dataList = jsonDecode(response.body);
 
     // Convertir la lista de datos en una lista de objetos PictogramResult
@@ -37,6 +37,10 @@ Future<List<PictogramResult>> searchPictograms(String searchTerm) async {
             ))
         .toList();
     return results;
+  } else if (response.statusCode == 404) {
+    // Indicar que no hay resultados
+    // Aquí podrías tener una lógica específica para mostrar el mensaje en tu interfaz
+    return [];
   } else {
     throw Exception('Failed to fetch pictograms');
   }

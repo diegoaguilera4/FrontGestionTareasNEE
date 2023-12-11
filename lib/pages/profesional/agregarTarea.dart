@@ -7,6 +7,9 @@ import 'package:gestiontareas/pages/page_404.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
+import '../pictogramas/PictogramSearch.dart';
+import '../pictogramas/pictograma.dart';
+
 class AgregarTareaView extends StatefulWidget {
   const AgregarTareaView({Key? key}) : super(key: key);
 
@@ -25,10 +28,11 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
   List<TextEditingController> instruccionesControllers = [
     TextEditingController()
   ];
+  PictogramResult? pictogramResult =
+      PictogramResult(id: 0, keyword: 'xd', imageUrl: '');
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initializeRol();
   }
@@ -37,13 +41,16 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
     try {
       Map<String, dynamic> jwtDecodedToken =
           JwtDecoder.decode(window.localStorage['token']!);
-      // Verificar si el rol es 'Profesional' antes de mostrar la vista
       rol = jwtDecodedToken['rol'];
     } catch (e) {
-      // Manejar cualquier error al decodificar el token, por ejemplo, token no válido.
       print('Error al decodificar el token: $e');
-      // Puedes manejar el error de otra manera, como cerrar sesión y volver a la pantalla de inicio.
     }
+  }
+
+  void actualizarPictogramResult(PictogramResult? nuevoResultado) {
+    setState(() {
+      pictogramResult = nuevoResultado;
+    });
   }
 
   @override
@@ -91,6 +98,15 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                     ),
                   ),
                 ),
+                if (pictogramResult?.imageUrl != '')
+                  Image.network(
+                    pictogramResult?.imageUrl ??
+                        '', // Asegúrate de manejar el caso en que imageUrl sea nulo
+                    width: 100, // ajusta el ancho según tus necesidades
+                    height: 100, // ajusta la altura según tus necesidades
+                    fit: BoxFit
+                        .cover, // o utiliza otro método de ajuste según tus necesidades
+                  ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50.0),
                   child: Form(
@@ -118,7 +134,7 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                               ),
                             ),
                             const SizedBox(width: 5),
-                            if (MediaQuery.of(context).size.width > 768)
+                            if (MediaQuery.of(context).size.width > 820)
                               Expanded(
                                 child: ElevatedButton.icon(
                                   onPressed: () {
@@ -135,9 +151,9 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                                   label: const Text('Casa'),
                                 ),
                               ),
-                            if (MediaQuery.of(context).size.width > 768)
+                            if (MediaQuery.of(context).size.width > 820)
                               const SizedBox(width: 5),
-                            if (MediaQuery.of(context).size.width > 768)
+                            if (MediaQuery.of(context).size.width > 820)
                               Expanded(
                                 child: ElevatedButton.icon(
                                   onPressed: () {
@@ -154,22 +170,31 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                                   label: const Text('Colegio'),
                                 ),
                               ),
-                            if (MediaQuery.of(context).size.width > 768)
+                            if (MediaQuery.of(context).size.width > 820)
                               const SizedBox(width: 5),
-                            if (MediaQuery.of(context).size.width > 768)
+                            if (MediaQuery.of(context).size.width > 820)
                               Expanded(
                                 flex: 1,
                                 child: ElevatedButton.icon(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var pictogramaSeleccionado =
+                                        await Navigator.pushNamed(
+                                            context, '/pictogramas');
+                                    if (pictogramaSeleccionado != null) {
+                                      actualizarPictogramResult(
+                                          pictogramaSeleccionado
+                                              as PictogramResult?);
+                                    }
+                                  },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: primaryColor),
                                   icon: const Icon(Icons.add_a_photo),
-                                  label: const Text('Agregar imagen'),
+                                  label: const Text('Agregar pictograma'),
                                 ),
                               ),
-                            if (MediaQuery.of(context).size.width > 768)
+                            if (MediaQuery.of(context).size.width > 820)
                               const SizedBox(width: 5),
-                            if (MediaQuery.of(context).size.width > 768)
+                            if (MediaQuery.of(context).size.width > 820)
                               DropdownButton<String>(
                                 dropdownColor: Colors.white,
                                 value: repeticion,
@@ -196,7 +221,7 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
 
                         Row(
                           children: [
-                            if (MediaQuery.of(context).size.width <= 768)
+                            if (MediaQuery.of(context).size.width <= 820)
                               Expanded(
                                 child: ElevatedButton.icon(
                                   onPressed: () {
@@ -214,7 +239,7 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                                 ),
                               ),
                             const SizedBox(width: 5),
-                            if (MediaQuery.of(context).size.width <= 768)
+                            if (MediaQuery.of(context).size.width <= 820)
                               Expanded(
                                 child: ElevatedButton.icon(
                                   onPressed: () {
@@ -236,21 +261,30 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            if (MediaQuery.of(context).size.width <= 768)
+                            if (MediaQuery.of(context).size.width <= 820)
                               Expanded(
                                 child: ElevatedButton.icon(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var pictogramaSeleccionado =
+                                        await Navigator.pushNamed(
+                                            context, '/pictogramas');
+                                    if (pictogramaSeleccionado != null) {
+                                      actualizarPictogramResult(
+                                          pictogramaSeleccionado
+                                              as PictogramResult?);
+                                    }
+                                  },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: primaryColor),
                                   icon: const Icon(Icons.add_a_photo),
-                                  label: const Text('Agregar imagen'),
+                                  label: const Text('Agregar pictograma'),
                                 ),
                               ),
                           ],
                         ),
                         Row(
                           children: [
-                            if (MediaQuery.of(context).size.width <= 768)
+                            if (MediaQuery.of(context).size.width <= 820)
                               DropdownButton<String>(
                                 dropdownColor: Colors.white,
                                 value: repeticion,
@@ -365,7 +399,6 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               if (asignacion == null) {
-                                // Mostrar mensaje al usuario sobre la asignación no seleccionada
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
@@ -377,7 +410,6 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                               }
 
                               if (repeticion == null) {
-                                // Mostrar mensaje al usuario sobre la repetición no seleccionada
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
@@ -387,12 +419,10 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                                 );
                                 return;
                               }
-                              //recorrer instrucciones y validar que no esten vacias
                               for (var i = 0;
                                   i < instruccionesControllers.length;
                                   i++) {
                                 if (instruccionesControllers[i].text.isEmpty) {
-                                  // Mostrar mensaje al usuario sobre la repetición no seleccionada
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -403,9 +433,7 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                                   return;
                                 }
                               }
-                              //validar que instrucciones tenga al menos una instruccion
                               if (instruccionesControllers.isEmpty) {
-                                // Mostrar mensaje al usuario sobre la repetición no seleccionada
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
@@ -450,9 +478,6 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
 
   Future<void> _crearTarea(Map<String, dynamic> tareaData) async {
     try {
-      // Lógica para enviar la tarea al servidor o almacenarla localmente
-      // Puedes adaptar la lógica de _crearPaciente en AgregarPacienteView para tus necesidades de tareas
-      //transformar instrucciones a instruccion: {descripcion: intruccion[i]}
       List<Map<String, dynamic>> instrucciones = [];
       for (var i = 0; i < tareaData['instrucciones'].length; i++) {
         instrucciones.add({
@@ -466,22 +491,18 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(tareaData),
       );
-      //Comprobar el envio con response.statusCode
       if (response.statusCode == 201) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Tarea creada exitosamente.'),
             backgroundColor: buttonColor1,
           ),
         );
-        // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/sesiones');
       } else {
         throw Exception('Error al crear la tarea');
       }
     } catch (error) {
-      // Manejar errores generales
       print('Error: $error');
     }
   }
