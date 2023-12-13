@@ -2,11 +2,12 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
+import 'package:gestiontareas/pages/usuarioGeneral/enlazarPaciente.dart';
 import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
 import '../pages/auth/login.dart';
 
 class MenuPaciente extends StatefulWidget {
-  MenuPaciente({Key? key, required String currentPage}) : super(key: key);
+  MenuPaciente({Key? key}) : super(key: key);
 
   @override
   _MenuPacienteState createState() => _MenuPacienteState();
@@ -35,6 +36,7 @@ class _MenuPacienteState extends State<MenuPaciente> {
             ),
           ),
           _buildMenuItem('/tareas', 'Mis tareas', Icons.dashboard),
+          _buildMenuItem('/enlazar', 'Enlazar paciente', Icons.link),
           // Agrega más elementos de menú según tus necesidades
           const Divider(), // Línea divisoria
           _buildMenuItem('', 'Cerrar Sesión', Icons.exit_to_app),
@@ -67,11 +69,21 @@ class _MenuPacienteState extends State<MenuPaciente> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskView(),
-                settings: RouteSettings(name: '/tareas'),
+                builder: (context) => const TaskView(),
+                settings: const RouteSettings(name: '/tareas'),
               ),
             );
-          } else if (title == 'Cerrar Sesión') {
+          } 
+          else if(title == 'Enlazar paciente'){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EnlazarPaciente(),
+                settings: const RouteSettings(name: '/enlazar'),
+              ),
+            );
+          }
+          else if (title == 'Cerrar Sesión') {
             _handleLogout();
           }
         },

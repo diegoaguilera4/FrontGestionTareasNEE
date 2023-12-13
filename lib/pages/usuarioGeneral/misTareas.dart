@@ -64,7 +64,7 @@ class _TaskViewState extends State<TaskView> {
         title: const Text('Tareas asignadas'),
         backgroundColor: secondaryColor,
       ),
-      drawer: MenuPaciente(currentPage: ''),
+      drawer: MenuPaciente(),
       body: _buildBody(),
     );
   }

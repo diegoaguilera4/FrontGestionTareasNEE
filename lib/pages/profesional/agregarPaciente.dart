@@ -81,7 +81,7 @@ class _AgregarPacienteViewState extends State<AgregarPacienteView> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PacientesView(),
+                builder: (context) => const PacientesView(),
                 settings: const RouteSettings(name: '/pacientes'),
               ),
             );

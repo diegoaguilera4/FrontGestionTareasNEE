@@ -4,6 +4,7 @@ import 'package:gestiontareas/pages/pictogramas/PictogramSearch.dart';
 import 'package:gestiontareas/pages/profesional/agregarPaciente.dart';
 import 'package:gestiontareas/pages/auth/login.dart';
 import 'package:gestiontareas/pages/profesional/agregarTarea.dart';
+import 'package:gestiontareas/pages/usuarioGeneral/enlazarPaciente.dart';
 import 'package:gestiontareas/pages/usuarioGeneral/misTareas.dart';
 import 'package:gestiontareas/pages/profesional/pacientes.dart';
 import 'package:gestiontareas/pages/page_404.dart';
@@ -26,14 +27,15 @@ class MyApp extends StatelessWidget {
   final _routes = {
     '/': (context) => LoginView(),
     '/registro': (context) => RegistroView(),
-    '/profesional': (context) => ProfesionalView(),
-    '/pacientes': (context) => PacientesView(),
+    '/profesional': (context) => const ProfesionalView(),
+    '/pacientes': (context) => const PacientesView(),
     '/sesiones': (context) => const SesionesView(),
     '/agregarPaciente': (context) =>
         AgregarPacienteView(onPacienteAdded: () {}),
-    '/tareas': (context) => TaskView(),
+    '/tareas': (context) => const TaskView(),
     '/agregarTarea': (context) => const AgregarTareaView(),
     '/pictogramas': (context) => PictogramSearchView(),
+    '/enlazar': (context) => const EnlazarPaciente(),
   };
 
   @override
