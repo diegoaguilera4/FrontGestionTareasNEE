@@ -48,6 +48,14 @@ class _PictogramSearchViewState extends State<PictogramSearchView> {
   }
 
   void _handleItemSelected(PictogramResult selectedResult) {
+    // Desmarcar todos los elementos
+    for (var result in _results) {
+      result.isSelected = false;
+    }
+
+    // Marcar el último elemento seleccionado
+    selectedResult.isSelected = true;
+
     // Cerrar el cuadro de diálogo y pasar el pictograma seleccionado como resultado
     pictogramResult = selectedResult;
   }
@@ -93,11 +101,25 @@ class _PictogramSearchViewState extends State<PictogramSearchView> {
                       final result = _results[index];
                       return InkWell(
                         onTap: () {
+                          setState(() {
+                            // Marcar/desmarcar el pictograma como seleccionado
+                            result.isSelected = !result.isSelected;
+                          });
                           _handleItemSelected(result);
                         },
                         child: ListTile(
                           leading: Image.network(result.imageUrl),
-                          title: Text(result.keyword),
+                          title: Text(
+                            result.keyword,
+                            style: TextStyle(
+                              color: result.isSelected
+                                  ? Colors.blue
+                                  : Colors.black,
+                              fontWeight: result.isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
                         ),
                       );
                     },

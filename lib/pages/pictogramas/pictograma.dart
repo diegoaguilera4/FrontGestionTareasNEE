@@ -2,14 +2,16 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class PictogramResult {
-  final int id;
-  final String keyword;
-  final String imageUrl;
+  int id;
+  String keyword;
+  String imageUrl;
+  bool isSelected;
 
   PictogramResult({
     required this.id,
     required this.keyword,
     required this.imageUrl,
+    this.isSelected = false,
   });
 
   //metodo imprimir objeto
