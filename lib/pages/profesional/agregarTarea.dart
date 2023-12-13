@@ -444,7 +444,7 @@ class _AgregarTareaViewState extends State<AgregarTareaView> {
                               Map<String, dynamic> nuevaTarea = {
                                 'nombre': nombreController.text,
                                 'estado': 'recien creada',
-                                'imagen': '.',
+                                'imagen': pictogramResult?.imageUrl ?? '',
                                 'asignacion': asignacion!,
                                 'repeticion': repeticion,
                                 'instrucciones': instruccionesControllers
