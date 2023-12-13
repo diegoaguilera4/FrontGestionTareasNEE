@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:html';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:gestiontareas/colores.dart';
 import 'package:gestiontareas/pages/page_404.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import '../pictogramas/PictogramSearch.dart';
 import '../pictogramas/pictograma.dart';
 
 class AgregarTareaView extends StatefulWidget {
